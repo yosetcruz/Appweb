@@ -14,23 +14,21 @@ body {
     background: linear-gradient(to bottom, #87CEEB, #001f3f);
 }
 
+/* ===================== */
+/* LAYOUT */
+/* ===================== */
 #layout{
     flex: 1;
     height: 100vh;
 
     display: flex;
     flex-direction: column;
-    aling-items: center;
+    align-items: center;
     justify-content: center;
+
     transition: all 0.4s ease;
 }
-#contenido {
-    transition: transform 0.5s ease; 
-}
 
-.sidebar.abierto ~ #contenido {
-    transform: translateX(150px);
-} 
 /* ===================== */
 /* TÍTULO */
 /* ===================== */
@@ -49,7 +47,9 @@ body {
     transform: translateY(-220px);
 }
 
+/* ===================== */
 /* BOTÓN */
+/* ===================== */
 .boton {
     padding: 14px 22px;
     color: white;
@@ -61,9 +61,8 @@ body {
     background: linear-gradient(to right, #00c6ff, #0072ff);
     transition: 0.3s;
 
-    width: auto;          /* 👈 clave */
-    display: inline-block; /* 👈 evita que se estire */
-    align-self: center;
+    width: auto;
+    display: inline-block;
 }
 
 .boton:hover:not(:disabled) {
@@ -75,11 +74,9 @@ body {
     cursor: default;
 }
 
-body.sidebar-abierto #layout {
-    margin-left: 300px;
-    width: calc(100% - 300px);
-}
+/* ===================== */
 /* SIDEBAR */
+/* ===================== */
 .sidebar {
     position: fixed;
     top: 0;
@@ -119,7 +116,9 @@ body.sidebar-abierto #layout {
     background: #005599;
 }
 
-/* PANEL DERECHO */
+/* ===================== */
+/* MODAL */
+/* ===================== */
 .modal {
     position: fixed;
     top: 0;
@@ -128,18 +127,26 @@ body.sidebar-abierto #layout {
     height: 100%;
 
     background: rgba(0,0,0,0.6);
-    display: none;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transform: translateY(60px);
+    transition: all 0.4s ease;
 
     z-index: 500;
 }
 
-/* SOLO visible si sidebar está abierto */
-.sidebar:not(.abierto) ~ .modal {
-    display: none !important;
+.modal.activo {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
+/* CONTENIDO */
 .modal-content {
-       width: 100%;
+    position: relative;
+    width: 100%;
     height: 100%;
 
     display: flex;
@@ -153,33 +160,41 @@ body.sidebar-abierto #layout {
     padding: 40px;
     box-sizing: border-box;
 
-    /* 🌌 FONDO DE PARTÍCULAS SOLO AQUÍ */
     background: radial-gradient(circle at 30% 30%, #00c6ff, transparent 40%),
                 radial-gradient(circle at 70% 70%, #0072ff, transparent 40%),
                 linear-gradient(to bottom, #001f3f, #000814);
-
-   
 }
 
+/* BOTÓN CERRAR */
 .cerrar {
-    margin-top: 20px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
     background: red;
     color: white;
-    padding: 10px 18px;
+    padding: 8px 14px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
 }
-</style>
 
+
+/* cuando el sidebar está abierto */
+body.sidebar-abierto #layout {
+    margin-left: 300px;
+    width: calc(100% - 300px);
+}
+</style>
 </head>
 
 <body>
+
 <div id="layout"> 
     <h1 id="titulo">Análisis del CMS</h1>
     
     <button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
-    Seleccionar muestra
+        Seleccionar muestra
     </button>
 </div>
 
@@ -200,15 +215,13 @@ body.sidebar-abierto #layout {
     </div>
 </div>
 
-<!-- PANEL DERECHO -->
+<!-- MODAL -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2>Archivo seleccionado</h2>
         <p id="modalTexto"></p>
 
-        <button class="cerrar" onclick="cerrarModal()">
-            Cerrar
-        </button>
+        <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
     </div>
 </div>
 
@@ -217,22 +230,19 @@ body.sidebar-abierto #layout {
 let bloqueado = false;
 let habilitado = false;
 
-/* ACTIVAR */
+/* ACTIVAR SIDEBAR */
 function habilitarMuestras() {
-
     habilitado = true;
 
     document.getElementById("sidebar").classList.add("abierto");
     document.getElementById("btnMuestras").disabled = true;
-    
-    document.body.classList.add("sidebar-abierto"); 
-
+    document.body.classList.add("sidebar-abierto");
     document.querySelectorAll(".muestra").forEach(el => {
         el.classList.add("activa");
     });
 }
 
-/* SELECCIONAR */
+/* SELECCIONAR MUESTRA */
 function seleccionar(elemento) {
 
     if (!habilitado || bloqueado) return;
@@ -250,13 +260,13 @@ function seleccionar(elemento) {
     document.getElementById("modalTexto").innerText =
         "Has seleccionado: " + archivo;
 
-    document.getElementById("modal").style.display = "flex";
+    document.getElementById("modal").classList.add("activo");
 }
 
-/* CERRAR PANEL */
+/* CERRAR MODAL */
 function cerrarModal() {
 
-    document.getElementById("modal").style.display = "none";
+    document.getElementById("modal").classList.remove("activo");
 
     bloqueado = false;
 
@@ -269,20 +279,21 @@ function cerrarModal() {
     }
 }
 
-/* CLIC DERECHO */
+/* CLICK DERECHO (RESET) */
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
 
     let modal = document.getElementById("modal");
 
-    if (modal.style.display !== "flex") {
+    if (!modal.classList.contains("activo")) {
 
         document.getElementById("sidebar").classList.remove("abierto"); 
         
+        document.getElementById("btnMuestras").disabled = false;
         document.body.classList.remove("sidebar-abierto");
 
         habilitado = false;
-        document.getElementById("btnMuestras").disabled = false;
+        bloqueado = false;
 
         document.querySelectorAll(".muestra").forEach(el => {
             el.classList.remove("activa");
