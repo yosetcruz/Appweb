@@ -11,23 +11,45 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
     background: linear-gradient(to bottom, #87CEEB, #001f3f);
 }
 
+#layout{
+    flex: 1;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    aling-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+#contenido {
+    transition: transform 0.5s ease; 
+}
+
+.sidebar.abierto ~ #contenido {
+    transform: translateX(150px);
+} 
+/* ===================== */
 /* TÍTULO */
-h1 {
+/* ===================== */
+#titulo {
     font-size: 48px;
     color: white;
     text-align: center;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
     margin-bottom: 20px;
+
+    position: relative;
+    transition: transform 0.6s ease;
 }
 
-/* BOTÓN PRINCIPAL */
+#titulo.arriba {
+    transform: translateY(-220px);
+}
+
+/* BOTÓN */
 .boton {
     padding: 14px 22px;
     color: white;
@@ -38,16 +60,24 @@ h1 {
     margin: 10px;
     background: linear-gradient(to right, #00c6ff, #0072ff);
     transition: 0.3s;
+
+    width: auto;          /* 👈 clave */
+    display: inline-block; /* 👈 evita que se estire */
+    align-self: center;
 }
 
-.boton:hover {
+.boton:hover:not(:disabled) {
     transform: scale(1.05);
 }
 
 .boton:disabled {
     opacity: 0.5;
-    cursor: auto;
-    transform: none; 
+    cursor: default;
+}
+
+body.sidebar-abierto #layout {
+    margin-left: 300px;
+    width: calc(100% - 300px);
 }
 /* SIDEBAR */
 .sidebar {
@@ -66,7 +96,7 @@ h1 {
     left: 0;
 }
 
-/* MUESTRAS (BLOQUEADAS POR DEFECTO) */
+/* MUESTRAS */
 .muestra {
     margin: 10px 0;
     padding: 10px;
@@ -76,11 +106,9 @@ h1 {
     cursor: not-allowed;
     opacity: 0.4;
     pointer-events: none;
-
     transition: 0.2s;
 }
 
-/* MUESTRAS ACTIVADAS */
 .muestra.activa {
     cursor: pointer;
     opacity: 1;
@@ -91,26 +119,46 @@ h1 {
     background: #005599;
 }
 
-/* MODAL FULLSCREEN */
+/* PANEL DERECHO */
 .modal {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 300px;
+    width: calc(100% - 300px);
     height: 100%;
-    background: rgba(0,0,0,0.85);
+
+    background: rgba(0,0,0,0.6);
     display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+
+    z-index: 500;
+}
+
+/* SOLO visible si sidebar está abierto */
+.sidebar:not(.abierto) ~ .modal {
+    display: none !important;
 }
 
 .modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
+       width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     text-align: center;
-    width: 60%;
+    color: white;
+
+    padding: 40px;
+    box-sizing: border-box;
+
+    /* 🌌 FONDO DE PARTÍCULAS SOLO AQUÍ */
+    background: radial-gradient(circle at 30% 30%, #00c6ff, transparent 40%),
+                radial-gradient(circle at 70% 70%, #0072ff, transparent 40%),
+                linear-gradient(to bottom, #001f3f, #000814);
+
+   
 }
 
 .cerrar {
@@ -127,12 +175,13 @@ h1 {
 </head>
 
 <body>
-
-<h1>Análisis del CMS</h1>
-
-<button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
+<div id="layout"> 
+    <h1 id="titulo">Análisis del CMS</h1>
+    
+    <button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
     Seleccionar muestra
-</button>
+    </button>
+</div>
 
 <!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
@@ -151,7 +200,7 @@ h1 {
     </div>
 </div>
 
-<!-- MODAL FULLSCREEN -->
+<!-- PANEL DERECHO -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2>Archivo seleccionado</h2>
@@ -168,29 +217,35 @@ h1 {
 let bloqueado = false;
 let habilitado = false;
 
-/* ACTIVAR MUESTRAS */
+/* ACTIVAR */
 function habilitarMuestras() {
 
     habilitado = true;
 
     document.getElementById("sidebar").classList.add("abierto");
     document.getElementById("btnMuestras").disabled = true;
+    
+    document.body.classList.add("sidebar-abierto"); 
 
-    let todas = document.querySelectorAll(".muestra");
-    todas.forEach(el => el.classList.add("activa"));
+    document.querySelectorAll(".muestra").forEach(el => {
+        el.classList.add("activa");
+    });
 }
 
-/* SELECCIONAR MUESTRA */
+/* SELECCIONAR */
 function seleccionar(elemento) {
 
-    // ❌ si no está habilitado o ya bloqueado
     if (!habilitado || bloqueado) return;
 
     let archivo = elemento.getAttribute("data-file");
 
     bloqueado = true;
 
-    // ✅ YA NO SE CIERRA EL SIDEBAR
+    document.querySelectorAll(".muestra").forEach(el => {
+        el.classList.remove("activa");
+    });
+
+    document.getElementById("titulo").classList.add("arriba");
 
     document.getElementById("modalTexto").innerText =
         "Has seleccionado: " + archivo;
@@ -198,24 +253,35 @@ function seleccionar(elemento) {
     document.getElementById("modal").style.display = "flex";
 }
 
-/* CERRAR MODAL */
+/* CERRAR PANEL */
 function cerrarModal() {
+
     document.getElementById("modal").style.display = "none";
 
     bloqueado = false;
+
+    document.getElementById("titulo").classList.remove("arriba");
+
+    if (habilitado) {
+        document.querySelectorAll(".muestra").forEach(el => {
+            el.classList.add("activa");
+        });
+    }
 }
 
-/* CERRAR SIDEBAR CON CLIC DERECHO */
+/* CLIC DERECHO */
 document.addEventListener("contextmenu", function(e) {
     e.preventDefault();
 
     let modal = document.getElementById("modal");
 
-    if (modal.style.display !=="flex"){ 
-        document.getElementById("sidebar").classList.remove("abierto");
+    if (modal.style.display !== "flex") {
 
-        habilitado = false; 
+        document.getElementById("sidebar").classList.remove("abierto"); 
+        
+        document.body.classList.remove("sidebar-abierto");
 
+        habilitado = false;
         document.getElementById("btnMuestras").disabled = false;
 
         document.querySelectorAll(".muestra").forEach(el => {
