@@ -61,7 +61,7 @@ h1 {
     left: 0;
 }
 
-/* 🔒 MUESTRAS (BLOQUEADAS POR DEFECTO) */
+/* MUESTRAS (BLOQUEADAS POR DEFECTO) */
 .muestra {
     margin: 10px 0;
     padding: 10px;
@@ -184,7 +184,7 @@ function seleccionar(elemento) {
 
     bloqueado = true;
 
-    document.getElementById("sidebar").classList.remove("abierto");
+    // ✅ YA NO SE CIERRA EL SIDEBAR
 
     document.getElementById("modalTexto").innerText =
         "Has seleccionado: " + archivo;
@@ -209,5 +209,3 @@ document.addEventListener("contextmenu", function(e) {
 
 </body>
 </html>
-
-
