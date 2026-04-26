@@ -30,14 +30,14 @@ body {
     object-fit: cover;
 
     opacity: 0;
-    animation: fade 12s infinite;
+    animation: fade 16s infinite;
 }
 
 /* cada imagen entra en su tiempo */
 .fondo img:nth-child(1) { animation-delay: 0s; }
-.fondo img:nth-child(2) { animation-delay: 3s; }
-.fondo img:nth-child(3) { animation-delay: 6s; }
-.fondo img:nth-child(4) { animation-delay: 9s; }
+.fondo img:nth-child(2) { animation-delay: 4s; }
+.fondo img:nth-child(3) { animation-delay: 8s; }
+.fondo img:nth-child(4) { animation-delay: 12s; }
 
 /* animación */
 @keyframes fade {
@@ -211,10 +211,10 @@ body.sidebar-abierto #layout {
 
 <!-- 🔥 SLIDER -->
 <div class="fondo">
-    <img src="fondo1.jpeg">
-    <img src="fondo2.jpeg">
-    <img src="fondo3.jpeg">
-    <img src="fondo4.jpeg">
+    <img src="fondo/fondo1.jpeg">
+    <img src="fondo/fondo2.jpeg">
+    <img src="fondo/fondo3.jpeg">
+    <img src="fondo/fondo4.jpeg">
 </div>
 
 <!-- 🔥 DEGRADADO -->
