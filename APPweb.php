@@ -9,13 +9,63 @@ body {
     margin: 0;
     height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-
     display: flex;
-    background: linear-gradient(to bottom, #87CEEB, #001f3f);
+    overflow: hidden;
 }
 
 /* ===================== */
-/* LAYOUT */
+/* SLIDER DE FONDO */
+/* ===================== */
+.fondo {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.fondo img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    opacity: 0;
+    animation: fade 12s infinite;
+}
+
+/* cada imagen entra en su tiempo */
+.fondo img:nth-child(1) { animation-delay: 0s; }
+.fondo img:nth-child(2) { animation-delay: 3s; }
+.fondo img:nth-child(3) { animation-delay: 6s; }
+.fondo img:nth-child(4) { animation-delay: 9s; }
+
+/* animación */
+@keyframes fade {
+    0%   { opacity: 0; }
+    8%   { opacity: 1; }
+    25%  { opacity: 1; }
+    33%  { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* ===================== */
+/* DEGRADADO ENCIMA */
+/* ===================== */
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(135,206,235,0.4),
+        rgba(0,31,63,0.95)
+    );
+}
+
+/* ===================== */
+/* TU UI (igual que antes) */
 /* ===================== */
 #layout{
     flex: 1;
@@ -29,14 +79,11 @@ body {
     transition: all 0.4s ease;
 }
 
-/* ===================== */
-/* TÍTULO */
-/* ===================== */
 #titulo {
     font-size: 48px;
     color: white;
     text-align: center;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
     margin-bottom: 20px;
 
     position: relative;
@@ -47,9 +94,6 @@ body {
     transform: translateY(-220px);
 }
 
-/* ===================== */
-/* BOTÓN */
-/* ===================== */
 .boton {
     padding: 14px 22px;
     color: white;
@@ -60,9 +104,6 @@ body {
     margin: 10px;
     background: linear-gradient(to right, #00c6ff, #0072ff);
     transition: 0.3s;
-
-    width: auto;
-    display: inline-block;
 }
 
 .boton:hover:not(:disabled) {
@@ -71,12 +112,9 @@ body {
 
 .boton:disabled {
     opacity: 0.5;
-    cursor: default;
 }
 
-/* ===================== */
 /* SIDEBAR */
-/* ===================== */
 .sidebar {
     position: fixed;
     top: 0;
@@ -93,48 +131,37 @@ body {
     left: 0;
 }
 
-/* MUESTRAS */
 .muestra {
     margin: 10px 0;
     padding: 10px;
     background: #003366;
     border-radius: 6px;
-
-    cursor: not-allowed;
     opacity: 0.4;
     pointer-events: none;
-    transition: 0.2s;
 }
 
 .muestra.activa {
-    cursor: pointer;
     opacity: 1;
     pointer-events: auto;
+    cursor: pointer;
 }
 
 .muestra:hover {
     background: #005599;
 }
 
-/* ===================== */
 /* MODAL */
-/* ===================== */
 .modal {
     position: fixed;
     top: 0;
     left: 300px;
     width: calc(100% - 300px);
     height: 100%;
-
     background: rgba(0,0,0,0.6);
-
     opacity: 0;
     pointer-events: none;
-
     transform: translateY(60px);
     transition: all 0.4s ease;
-
-    z-index: 500;
 }
 
 .modal.activo {
@@ -143,53 +170,57 @@ body {
     transform: translateY(0);
 }
 
-/* CONTENIDO */
+
 .modal-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
+   position: relative;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
+   color: white;
+   padding: 40px;
+   box-sizing: border-box;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-    color: white;
-
-    padding: 40px;
-    box-sizing: border-box;
-
-    background: radial-gradient(circle at 30% 30%, #00c6ff, transparent 40%),
-                radial-gradient(circle at 70% 70%, #0072ff, transparent 40%),
-                linear-gradient(to bottom, #001f3f, #000814);
+   background:
+   radial-gradient(circle at 30% 30%, rgba(0,198,255,0.4), rgba(0,198,255,0) 40%),
+   radial-gradient(circle at 70% 70%, rgba(0,114,255,0.4), rgba(0,114,255,0) 40%),
+   linear-gradient(to bottom, #001f3f, #000814);
 }
 
-/* BOTÓN CERRAR */
 .cerrar {
     position: absolute;
     top: 15px;
     right: 15px;
-
     background: red;
     color: white;
-    padding: 8px 14px;
+    padding: 8px;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
 }
 
-
-/* cuando el sidebar está abierto */
+/* sidebar shift */
 body.sidebar-abierto #layout {
     margin-left: 300px;
-    width: calc(100% - 300px);
 }
 </style>
 </head>
 
 <body>
 
+<!-- 🔥 SLIDER -->
+<div class="fondo">
+    <img src="fondo1.jpeg">
+    <img src="fondo2.jpeg">
+    <img src="fondo3.jpeg">
+    <img src="fondo4.jpeg">
+</div>
+
+<!-- 🔥 DEGRADADO -->
+<div class="overlay"></div>
+
+<!-- TU CONTENIDO -->
 <div id="layout"> 
     <h1 id="titulo">Análisis del CMS</h1>
     
@@ -198,110 +229,69 @@ body.sidebar-abierto #layout {
     </button>
 </div>
 
-<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
     <h2>Selecciona tu muestra</h2>
 
-    <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">
-        Jpsimumu.csv
-    </div>
-
-    <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">
-        Dimuon_DoubleMu.csv
-    </div>
-
-    <div class="muestra" data-file="csv/muestra3.csv" onclick="seleccionar(this)">
-        muestra3.csv
-    </div>
+    <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Jpsimumu.csv</div>
+    <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Dimuon_DoubleMu.csv</div>
+    <div class="muestra" data-file="csv/muestra3.csv" onclick="seleccionar(this)">muestra3.csv</div>
 </div>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <h2>Archivo seleccionado</h2>
         <p id="modalTexto"></p>
-
         <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
     </div>
 </div>
 
 <script>
-
 let bloqueado = false;
 let habilitado = false;
 
-/* ACTIVAR SIDEBAR */
 function habilitarMuestras() {
     habilitado = true;
-
-    document.getElementById("sidebar").classList.add("abierto");
-    document.getElementById("btnMuestras").disabled = true;
+    sidebar.classList.add("abierto");
+    btnMuestras.disabled = true;
     document.body.classList.add("sidebar-abierto");
-    document.querySelectorAll(".muestra").forEach(el => {
-        el.classList.add("activa");
-    });
+
+    document.querySelectorAll(".muestra").forEach(el => el.classList.add("activa"));
 }
 
-/* SELECCIONAR MUESTRA */
-function seleccionar(elemento) {
-
+function seleccionar(el) {
     if (!habilitado || bloqueado) return;
-
-    let archivo = elemento.getAttribute("data-file");
 
     bloqueado = true;
 
-    document.querySelectorAll(".muestra").forEach(el => {
-        el.classList.remove("activa");
-    });
+    document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
+    titulo.classList.add("arriba");
 
-    document.getElementById("titulo").classList.add("arriba");
-
-    document.getElementById("modalTexto").innerText =
-        "Has seleccionado: " + archivo;
-
-    document.getElementById("modal").classList.add("activo");
+    modalTexto.innerText = "Has seleccionado: " + el.dataset.file;
+    modal.classList.add("activo");
 }
 
-/* CERRAR MODAL */
 function cerrarModal() {
-
-    document.getElementById("modal").classList.remove("activo");
-
+    modal.classList.remove("activo");
     bloqueado = false;
-
-    document.getElementById("titulo").classList.remove("arriba");
+    titulo.classList.remove("arriba");
 
     if (habilitado) {
-        document.querySelectorAll(".muestra").forEach(el => {
-            el.classList.add("activa");
-        });
+        document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa"));
     }
 }
 
-/* CLICK DERECHO (RESET) */
-document.addEventListener("contextmenu", function(e) {
+document.addEventListener("contextmenu", e => {
     e.preventDefault();
-
-    let modal = document.getElementById("modal");
-
     if (!modal.classList.contains("activo")) {
-
-        document.getElementById("sidebar").classList.remove("abierto"); 
-        
-        document.getElementById("btnMuestras").disabled = false;
+        sidebar.classList.remove("abierto");
+        btnMuestras.disabled = false;
         document.body.classList.remove("sidebar-abierto");
-
         habilitado = false;
         bloqueado = false;
 
-        document.querySelectorAll(".muestra").forEach(el => {
-            el.classList.remove("activa");
-        });
+        document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
     }
 });
-
-
 </script>
 
 </body>
