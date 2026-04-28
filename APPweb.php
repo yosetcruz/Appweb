@@ -221,6 +221,9 @@ body {
     color: white;
     padding: 8px 12px;
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
 /* sidebar shift */
@@ -232,7 +235,7 @@ body.sidebar-abierto #layout {
 
 <body>
 
-<!-- 🔥 SLIDER -->
+<!--  SLIDER -->
 <div class="fondo">
     <img src="fondo/fondo1.jpeg">
     <img src="fondo/fondo2.jpeg">
@@ -240,7 +243,7 @@ body.sidebar-abierto #layout {
     <img src="fondo/fondo4.jpeg">
 </div>
 
-<!-- 🔥 DEGRADADO -->
+<!--  DEGRADADO -->
 <div class="overlay"></div>
 
 <!-- TU CONTENIDO -->
@@ -262,10 +265,11 @@ body.sidebar-abierto #layout {
 
 <div id="modal" class="modal">
     <div class="modal-content">
-    <div class="modal-header"> 
-        <p id="modalTexto"></p>
-        <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
-    </div>
+        <div class="modal-header"> 
+            <p id="modalTexto"></p>
+            <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>    
 </div>
 
 <script>
