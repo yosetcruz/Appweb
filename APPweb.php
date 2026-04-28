@@ -94,6 +94,18 @@ body {
     transform: translateY(-220px);
 }
 
+#modalTexto {
+    font-size: 22px;
+    font-weight: bold;
+
+    backdrop-filter: blur(6px);
+    background: rgba(0, 20, 40, 0.6);
+    padding: 8px 14px;
+    border-radius: 8px;
+
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
 .boton {
     padding: 14px 22px;
     color: white;
@@ -190,13 +202,24 @@ body {
    linear-gradient(to bottom, #001f3f, #000814);
 }
 
-.cerrar {
+.modal-header {
     position: absolute;
     top: 15px;
-    right: 15px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cerrar {
     background: red;
     color: white;
-    padding: 8px;
+    padding: 8px 12px;
     border: none;
 }
 
@@ -225,7 +248,7 @@ body.sidebar-abierto #layout {
     <h1 id="titulo">Análisis del CMS</h1>
     
     <button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
-        Seleccionar muestra
+        Comenzar
     </button>
 </div>
 
@@ -239,13 +262,19 @@ body.sidebar-abierto #layout {
 
 <div id="modal" class="modal">
     <div class="modal-content">
-        <h2>Archivo seleccionado</h2>
+    <div class="modal-header"> 
         <p id="modalTexto"></p>
         <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
     </div>
 </div>
 
 <script>
+const sidebar = document.getElementById("sidebar");
+const btnMuestras = document.getElementById("btnMuestras");
+const titulo = document.getElementById("titulo");
+const modal = document.getElementById("modal");
+const modalTexto = document.getElementById("modalTexto");
+
 let bloqueado = false;
 let habilitado = false;
 
@@ -266,8 +295,10 @@ function seleccionar(el) {
     document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
     titulo.classList.add("arriba");
 
-    modalTexto.innerText = "Has seleccionado: " + el.dataset.file;
+    const archivo = el.dataset.file.split("/").pop().replace(".csv", "");
+    modalTexto.innerText = archivo;
     modal.classList.add("activo");
+   
 }
 
 function cerrarModal() {
@@ -296,3 +327,4 @@ document.addEventListener("contextmenu", e => {
 
 </body>
 </html>
+
