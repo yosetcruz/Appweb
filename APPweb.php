@@ -265,12 +265,34 @@ body.sidebar-abierto #layout {
 
 <div id="modal" class="modal">
     <div class="modal-content">
+
         <div class="modal-header"> 
             <p id="modalTexto"></p>
             <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
         </div>
+
+        <!--  AQUÍ VA -->
+        <div id="panelCortes" style="margin-top: 60px;">
+            <label>Variable:</label>
+            <select id="variable">
+                <option value="mu1_pt">pt1</option>
+                <option value="mu2_pt">pt2</option>
+                <option value="mu1_eta">eta1</option>
+                <option value="mu2_eta">eta2</option>
+            </select>
+
+            <label>Valor:</label>
+            <input type="number" id="valor" value="20">
+
+            <button class="boton" onclick="aplicarCorte()">Aplicar corte</button>
+        </div>
+
+        <div id="grafica" style="width:80%; height:400px;"></div>
+
     </div>    
 </div>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <script>
 const sidebar = document.getElementById("sidebar");
@@ -281,6 +303,37 @@ const modalTexto = document.getElementById("modalTexto");
 
 let bloqueado = false;
 let habilitado = false;
+let datosGlobales = [];
+
+function procesarDatos(data) {
+
+    let df = data.filter(row =>
+        row.mu1_pt != null &&
+        row.mu2_pt != null &&
+        !isNaN(row.mu1_pt) &&
+        !isNaN(row.mu2_pt)
+    );
+
+    df.forEach(row => {
+
+        let deta = row.mu1_eta - row.mu2_eta;
+        let dphi = row.mu1_phi - row.mu2_phi;
+
+        let M2 = 2 * row.mu1_pt * row.mu2_pt *
+            (Math.cosh(deta) - Math.cos(dphi));
+
+        row.M = Math.sqrt(Math.max(M2, 0));
+    });
+
+    datosGlobales = df;
+
+    modalTexto.innerText = "Datos listos — aplica un corte";
+
+    console.log("Eventos:", df.length);
+
+    // ❌ QUITA ESTO
+    // aplicarCorte();
+}
 
 function habilitarMuestras() {
     habilitado = true;
@@ -299,10 +352,21 @@ function seleccionar(el) {
     document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
     titulo.classList.add("arriba");
 
-    const archivo = el.dataset.file.split("/").pop().replace(".csv", "");
-    modalTexto.innerText = archivo;
+    const archivo = el.dataset.file;
+    
+    modalTexto.innerText = "Cargando datos...";
     modal.classList.add("activo");
-   
+
+    Papa.parse(archivo, {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        complete: function(results){
+           modalTexto.innerText = "⏳ Cargando CSV..."; 
+           procesarDatos(results.data);
+           modalTexto.innerText = "✔ Datos listos";
+        }
+    });
 }
 
 function cerrarModal() {
@@ -313,6 +377,69 @@ function cerrarModal() {
     if (habilitado) {
         document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa"));
     }
+}
+
+function aplicarCorte() {
+
+    let variable = document.getElementById("variable").value;
+    let valor = parseFloat(document.getElementById("valor").value);
+
+    let df = datosGlobales;
+
+    let variables_validas = ["mu1_pt", "mu2_pt", "mu1_eta", "mu2_eta"];
+
+    if (!variables_validas.includes(variable)) {
+        alert("Variable no válida");
+        return;
+    }
+
+    let cut;
+
+    if (variable.includes("pt")) {
+        cut = df.filter(row => row[variable] > valor);
+    } else {
+        cut = df.filter(row => Math.abs(row[variable]) < valor);
+    }
+
+    console.log("datosGlobales:", datosGlobales.length);
+    console.log("primer elemento:", datosGlobales[0]);
+    console.log("Eventos después del corte:", cut.length);
+    console.log("DF total:", df.length);
+    console.log("Ejemplo:", df[0]);
+    console.log("Variable:", variable);
+    console.log("Valor:", valor);
+    dibujarHistograma(variable, df, cut);
+}
+
+function dibujarHistograma(variable, df, cut) {
+
+    let antes = df
+        .map(r => r[variable])
+        .filter(x => typeof x === "number" && !isNaN(x));
+
+    let despues = cut
+        .map(r => r[variable])
+        .filter(x => typeof x === "number" && !isNaN(x));
+
+    Plotly.newPlot("grafica", [
+        {
+            x: antes,
+            type: "histogram",
+            opacity: 0.5,
+            name: "Antes"
+        },
+        {
+            x: despues,
+            type: "histogram",
+            opacity: 0.7,
+            name: "Después"
+        }
+    ], {
+        title: `Histograma de ${variable}`,
+        barmode: "overlay",
+        xaxis: { title: variable },
+        yaxis: { title: "Eventos" }
+    });
 }
 
 document.addEventListener("contextmenu", e => {
