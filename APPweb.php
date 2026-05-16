@@ -273,6 +273,7 @@ body {
     width: 90%;
     height: 500px;
     margin-top: 20px;
+    cursor: default;
 }
 
 .boton-peligro {
@@ -359,8 +360,17 @@ body.sidebar-abierto #layout {
     background: rgba(255,255,255,0.1);
     color: #fff;
 }
+
+.js-plotly-plot .plotly .drag {
+    cursor: default !important;
+}
+
+.js-plotly-plot:hover .plotly .drag {
+    cursor: crosshair;
+}
 </style>
 </head>
+
 
 <body>
 
@@ -394,34 +404,14 @@ body.sidebar-abierto #layout {
 <div id="modal" class="modal">
     <div class="modal-content">
 
-       <button class="cerrar" onclick="cerrarmodal()">Cerrar</button>
+       <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
 
        <div class="modal-header"> 
           <p id="modalTexto"></p>
-
-    <!-- Controles fijos -->
-    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <label style="font-size:13px; white-space:nowrap;">Bins:</label>
-            <input type="range" id="numBins" min="5" max="200" value="50" step="1"
-                   style="width:110px; accent-color:#00c6ff;"
-                   oninput="document.getElementById('binsValDisplay').textContent = this.value">
-            <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:6px;">
-            <label style="font-size:13px;">Escala:</label>
-            <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
-            <button class="escala-btn"        id="btnLog" onclick="setEscala('log')">Logarítmica</button>
-        </div>
-    </div>
 </div>
-
 <div class="modal-body">
-
 <div class="selector-grafica">
     <h3>Opciones de visualización</h3>
-
     <div class="control-row">
         <label>Variable:</label>
         <select id="variableGrafica">
@@ -431,11 +421,8 @@ body.sidebar-abierto #layout {
             <option value="eta2">eta2</option>
         </select>
     </div>
-
-
-    <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
+    
 </div>
-
         <!-- Panel de cortes acumulativos -->
         <div class="panel-cortes">
             <h3>Aplicar Nuevo Corte</h3>
@@ -446,7 +433,6 @@ body.sidebar-abierto #layout {
                 <option value="eta1">eta1</option>
                 <option value="eta2">eta2</option>
             </select>
-
             <label>Operador:</label>
             <select id="operador">
                 <option value=">">&gt; (mayor que)</option>
@@ -455,20 +441,36 @@ body.sidebar-abierto #layout {
                 <option value="<=">&lt;= (menor o igual)</option>
                 <option value="abs_lt">|x| &lt; (valor absoluto)</option>
             </select>
-
             <label>Valor:</label>
             <input type="number" id="valor" value="20" step="any">
-
             <button class="boton boton-exito" onclick="aplicarCorteAcumulativo()">Aplicar corte</button>
             <button class="boton boton-peligro" onclick="reiniciarCortes()">Reiniciar todos los cortes</button>
         </div>
 
         <!-- Lista de cortes aplicados -->
         <div class="lista-cortes">
-            <h3>Cortes Aplicados (Acumulativos)</h3>
+            <h3>Cortes Aplicados</h3>
             <div id="listaCortes"></div>
             <div id="infoEventos" style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px;"></div>
         </div>
+
+      <!-- Bins y escala justo arriba de la gráfica -->
+            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
+                <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label style="font-size:13px; white-space:nowrap;">Bins:</label>
+                    <input type="range" id="numBins" min="5" max="200" value="50" step="1"
+                           style="width:110px; accent-color:#00c6ff;"
+                           oninput="document.getElementById('binsValDisplay').textContent = this.value">
+                    <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <label style="font-size:13px;">Escala:</label>
+                    <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
+                    <button class="escala-btn"        id="btnLog" onclick="setEscala('log')">Logarítmica</button>
+                </div>
+            </div>
 
         <div id="grafica"></div>
       </div>
@@ -684,7 +686,7 @@ function eliminarCorte(indice) {
     
     actualizarListaCortes();
     dibujarHistogramaCompleto();
-    modalTexto.innerText = `🗑️ Corte eliminado. Eventos: ${datosActuales.length}`;
+    modalTexto.innerText = `Corte eliminado. Eventos: ${datosActuales.length}`;
 }
 
 function actualizarListaCortes() {
@@ -865,8 +867,7 @@ function dibujarHistogramaCompleto() {
             'hoverClosestCartesian','hoverCompareCartesian',
             'togglrSpikelines', 'resetScale2d'
         ],
-        modeBarButtonsToAdd:[],
-        scrollZoom: true,
+        scrollZoom: false,
         displaylogo: false
     });
 }
@@ -899,7 +900,7 @@ function seleccionar(el) {
         },
         error: function(error) {
             console.error("Error cargando CSV:", error);
-            modalTexto.innerText = "❌ Error cargando el archivo";
+            modalTexto.innerText = "Error cargando el archivo";
             bloqueado = false;
         }
     });
@@ -925,6 +926,14 @@ document.addEventListener("contextmenu", e => {
         bloqueado = false;
         document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
     }
+});
+
+const graficaDiv = document.getElementById("grafica");
+graficaDiv.addEventListener("mouseenter", () => {
+    Plotly.relayout("grafica", { scrollZoom: true });
+});
+graficaDiv.addEventListener("mouseleave", () => {
+    Plotly.relayout("grafica", { scrollZoom: false });
 });
 </script>
 
