@@ -160,16 +160,14 @@ body {
     width: calc(100% - 300px);
     height: 100%;
     background: rgba(0,0,0,0.6);
-    opacity: 0;
-    pointer-events: none;
+    display: none;
     transform: translateY(60px);
     transition: all 0.4s ease;
     z-index: 20;
 }
 
 .modal.activo {
-    opacity: 1;
-    pointer-events: auto;
+    display: block;
     transform: translateY(0);
 }
 
@@ -371,7 +369,6 @@ body.sidebar-abierto #layout {
 </style>
 </head>
 
-
 <body>
 
 <!-- SLIDER -->
@@ -485,6 +482,9 @@ const sidebar = document.getElementById("sidebar");
 const btnMuestras = document.getElementById("btnMuestras");
 const titulo = document.getElementById("titulo");
 const modal = document.getElementById("modal");
+modal.addEventListener("transitioned", ()=>{
+    if(!modal.classList.contains("activo")){modal.style.pointerEvents = "none";}
+});
 const modalTexto = document.getElementById("modalTexto");
 
 let bloqueado = false;
@@ -885,6 +885,7 @@ function seleccionar(el) {
 
     const archivo = el.dataset.file;
     modalTexto.innerText = "Cargando datos...";
+    modal.style.pointerEvents = "auto";
     modal.classList.add("activo");
 
     Papa.parse(archivo, {
@@ -909,11 +910,13 @@ function seleccionar(el) {
 function cerrarModal() {
     modal.classList.remove("activo");
     bloqueado = false;
+    habilitado = false; 
+    btnMestras.disabled = false;
+    sidebar.classList.remove("abierto");
+    document.body.classList.remove("sidebar-abierto");
     titulo.classList.remove("arriba");
+    document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
 
-    if (habilitado) {
-        document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa"));
-    }
 }
 
 document.addEventListener("contextmenu", e => {
