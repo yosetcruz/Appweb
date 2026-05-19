@@ -85,13 +85,10 @@ body {
 }
 
 #modalTexto {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
-    backdrop-filter: blur(6px);
-    background: rgba(0, 20, 40, 0.6);
     padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
+    margin-right: auto;
 }
 
 .boton {
@@ -178,7 +175,7 @@ body {
    display: flex;
    flex-direction: column;
    color: white;
-   padding: 40px;
+   padding: 10px 40px 40px 40px;
    background: radial-gradient(circle at 30% 30%, rgba(0,198,255,0.4), rgba(0,198,255,0) 40%),
                radial-gradient(circle at 70% 70%, rgba(0,114,255,0.4), rgba(0,114,255,0) 40%),
                linear-gradient(to bottom, #001f3f, #000814);
@@ -186,32 +183,33 @@ body {
 }
 
 
-.modal-header {
-    position: relative;      /* se queda pegado arriba al hacer scroll */
+.modal-header p {
+    margin: 0;
+    position: relative;
     flex-shrink: 0;
     width: 100%;
-    padding: 10px 20px;
+    padding: 0px;
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    background: rgba(0, 15, 35, 0.85);   /* fondo semitransparente para que no tape el contenido */
-    backdrop-filter: blur(8px);
     z-index: 30;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    margin-top: -20px;
+    margin-top: 10px; 
 }
 
 .cerrar {
     position: fixed;
-    top: 15px;
-    right: 15px;
+    top: 1px;
+    right: 1px;
     background: red;
     color: white;
     padding: 8px 12px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     z-index: 100;
 }
@@ -221,9 +219,9 @@ body {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 10px;
-    margin: 20px;
-    width: 90%;
-    max-width: 800px;
+    margin: 20px 0;
+    width: 100%;
+    box-sizing: border-box; 
 }
 
 .panel-cortes select, .panel-cortes input {
@@ -234,12 +232,13 @@ body {
 
 .lista-cortes {
     background: rgba(0, 0, 0, 0.5);
-    padding: 15px;
-    border-radius: 8px;
-    margin: 20px;
-    width: 90%;
-    max-width: 800px;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    width: 100%;
+    box-sizing: border-box;
     text-align: left;
+    border: 1px solid rgba(0, 198, 255, 0.2);
 }
 
 .corte-item {
@@ -268,7 +267,7 @@ body {
 }
 
 #grafica {
-    width: 90%;
+    width: 100%;
     height: 500px;
     margin-top: 20px;
     cursor: default;
@@ -291,9 +290,9 @@ body.sidebar-abierto #layout {
     background: rgba(0, 0, 0, 0.7);
     padding: 15px;
     border-radius: 10px;
-    margin: 10px;
-    width: 90%;
-    max-width: 800px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .selector-grafica select {
@@ -366,6 +365,51 @@ body.sidebar-abierto #layout {
 .js-plotly-plot:hover .plotly .drag {
     cursor: crosshair;
 }
+
+.grupo-header {
+    background: rgba(0, 198, 255, 0.15);
+    border: 1px solid rgba(0, 198, 255, 0.4);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0 4px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    color: #00c6ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.grupo-header:hover {
+    background: rgba(0, 198, 255, 0.25);
+}
+
+.grupo-body {
+    display: none;
+    padding-left: 8px;
+}
+
+.grupo-body.abierto {
+    display: block;
+}
+
+.grupo-header.bloqueado {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.contenedor-central {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 0;
+}
 </style>
 </head>
 
@@ -392,86 +436,92 @@ body.sidebar-abierto #layout {
 </div>
 
 <div id="sidebar" class="sidebar">
-    <h2>Selecciona tu muestra</h2>
-    <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Jpsimumu.csv</div>
-    <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Dimuon_DoubleMu.csv</div>
-    <div class="muestra" data-file="csv/muestra3.csv" onclick="seleccionar(this)">muestra3.csv</div>
+    <h2>Muestras CMS</h2>
+
+    <div class="grupo-header bloqueado" onclick="toggleGrupo('g2muones')">
+        2 Muones <span id="flecha-g2muones">▶</span>
+    </div>
+    <div class="grupo-body" id="g2muones">
+        <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Muestra 1</div>
+        <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Muestra 2</div>
+        <div class="muestra" data-file="csv/muestra3.csv" onclick="seleccionar(this)">Muestra 3</div>
+    </div>
+
+    <div class="grupo-header bloqueado" onclick="toggleGrupo('g4muones')">
+        4 Muones <span id="flecha-g4muones">▶</span> 
+    </div>
+    <div class="grupo-body" id="g4muones">
+
+    </div>    
 </div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
 
-       <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
+        <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
 
-       <div class="modal-header"> 
-          <p id="modalTexto"></p>
-</div>
-<div class="modal-body">
-<div class="selector-grafica">
-    <h3>Opciones de visualización</h3>
-    <div class="control-row">
-        <label>Variable:</label>
-        <select id="variableGrafica">
-            <option value="pt1">pt1</option>
-            <option value="pt2">pt2</option>
-            <option value="eta1">eta1</option>
-            <option value="eta2">eta2</option>
-        </select>
-    </div>
-    
-</div>
-        <!-- Panel de cortes acumulativos -->
-        <div class="panel-cortes">
-            <h3>Aplicar Nuevo Corte</h3>
-            <label>Variable:</label>
-            <select id="variable">
-                <option value="pt1">pt1</option>
-                <option value="pt2">pt2</option>
-                <option value="eta1">eta1</option>
-                <option value="eta2">eta2</option>
-            </select>
-            <label>Operador:</label>
-            <select id="operador">
-                <option value=">">&gt; (mayor que)</option>
-                <option value="<">&lt; (menor que)</option>
-                <option value=">=">&gt;= (mayor o igual)</option>
-                <option value="<=">&lt;= (menor o igual)</option>
-                <option value="abs_lt">|x| &lt; (valor absoluto)</option>
-            </select>
-            <label>Valor:</label>
-            <input type="number" id="valor" value="20" step="any">
-            <button class="boton boton-exito" onclick="aplicarCorteAcumulativo()">Aplicar corte</button>
-            <button class="boton boton-peligro" onclick="reiniciarCortes()">Reiniciar todos los cortes</button>
-        </div>
-
-        <!-- Lista de cortes aplicados -->
-        <div class="lista-cortes">
-            <h3>Cortes Aplicados</h3>
-            <div id="listaCortes"></div>
-            <div id="infoEventos" style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px;"></div>
-        </div>
-
-      <!-- Bins y escala justo arriba de la gráfica -->
-            <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
-                <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <label style="font-size:13px; white-space:nowrap;">Bins:</label>
-                    <input type="range" id="numBins" min="5" max="200" value="50" step="1"
-                           style="width:110px; accent-color:#00c6ff;"
-                           oninput="document.getElementById('binsValDisplay').textContent = this.value">
-                    <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
-                </div>
-
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <label style="font-size:13px;">Escala:</label>
-                    <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
-                    <button class="escala-btn"        id="btnLog" onclick="setEscala('log')">Logarítmica</button>
-                </div>
+        <div class="modal-body">
+            <div class="modal-header">
+                <p id="modalTexto"></p>
             </div>
+            <div class="contenedor-central">
 
-        <div id="grafica"></div>
-      </div>
-    </div>    
+                <div class="selector-grafica">
+                    <h3>Opciones de visualización</h3>
+                    <div class="control-row">
+                        <label>Variable:</label>
+                        <select id="variableGrafica" onchange="resetVista()"></select>
+                    </div>
+                    <button class="boton boton-exito boton-pequeno" onclick="confirmarVariable()">Ver histograma</button>
+                </div>
+
+                <div class="panel-cortes" id="panelCortes" style="display:none">
+                    <h3>Aplicar Nuevo Corte</h3>
+                    <label>Variable:</label>
+                    <select id="variable" disabled></select>
+                    <label>Operador:</label>
+                    <select id="operador">
+                        <option value=">">&gt; (mayor que)</option>
+                        <option value="<">&lt; (menor que)</option>
+                        <option value=">=">&gt;= (mayor o igual)</option>
+                        <option value="<=">&lt;= (menor o igual)</option>
+                        <option value="abs_lt">|x| &lt; (valor absoluto)</option>
+                    </select>
+                    <label>Valor:</label>
+                    <input type="number" id="valor" value="20" step="any">
+                    <button class="boton boton-exito" onclick="aplicarCorteAcumulativo()">Aplicar corte</button>
+                </div>
+
+                <div id="contenedorBins" style="display:none; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
+                    <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <label style="font-size:13px; white-space:nowrap;">Bins:</label>
+                        <input type="range" id="numBins" min="5" max="200" value="50" step="1"
+                        style="width:110px; accent-color:#00c6ff;"
+                        oninput="document.getElementById('binsValDisplay').textContent = this.value">
+                        <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <label style="font-size:13px;">Escala:</label>
+                        <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
+                        <button class="escala-btn" id="btnLog" onclick="setEscala('log')">Logarítmica</button>
+                    </div>
+                </div>
+
+                <div id="grafica" style="display:none"></div>
+
+                <div class="lista-cortes" id="listaCortes-container" style="display:none">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="margin:0;">Cortes Aplicados</h3>
+                        <button class="boton boton-peligro boton-pequeno" onclick="reiniciarCortes()">Reiniciar todos los cortes</button>
+                    </div>
+                    <div id="listaCortes"></div>
+                    <div id="infoEventos" style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -500,8 +550,8 @@ function habilitarMuestras() {
     sidebar.classList.add("abierto");
     btnMuestras.disabled = true;
     document.body.classList.add("sidebar-abierto");
-
     document.querySelectorAll(".muestra").forEach(el => el.classList.add("activa"));
+    document.querySelectorAll(".grupo-header").forEach(el => el.classList.remove("bloqueado"));
 }
 
 
@@ -558,8 +608,29 @@ function procesarDatos(data) {
     datosOriginales = [...data];
     datosActuales = [...data];
     listaCortes = [];
-
     modalTexto.innerText = `Listo`;
+}
+
+function confirmarVariable() {
+    if (!datosOriginales || datosOriginales.length === 0) {
+        alert("Primero selecciona una muestra");
+        return;
+    }
+
+    const varSeleccionada = document.getElementById("variableGrafica").value;
+    const selectVariable = document.getElementById("variable");
+
+    if (varSeleccionada === "M") {
+        selectVariable.disabled = false;
+    } else {
+        selectVariable.value = varSeleccionada;
+        selectVariable.disabled = true;
+    }
+
+    document.getElementById("panelCortes").style.display = "block";
+    document.getElementById("contenedorBins").style.display = "flex";
+    document.getElementById("grafica").style.display = "block";
+    document.getElementById("listaCortes-container").style.display = "block";
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
@@ -709,7 +780,7 @@ function actualizarListaCortes() {
     
     const eficiencia = ((datosActuales.length / datosOriginales.length) * 100).toFixed(2);
     infoContainer.innerHTML = `
-        <strong>📊 Flujo de eventos (Cutflow):</strong><br>
+        <strong>Cutflow:</strong><br>
         ▸ Eventos originales: ${datosOriginales.length}<br>
         ▸ Eventos después de cortes: ${datosActuales.length}<br>
         <strong>▸ Eficiencia total: ${eficiencia}%</strong><br>
@@ -879,8 +950,11 @@ function actualizarGrafica() {
 function seleccionar(el) {
     if (!habilitado || bloqueado) return;
 
+    const nombreMuestra = el.textContent.trim();
+
     bloqueado = true;
     document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
+    document.querySelectorAll(".grupo-header").forEach(e => e.classList.add("bloqueado"));
     titulo.classList.add("arriba");
 
     const archivo = el.dataset.file;
@@ -893,10 +967,8 @@ function seleccionar(el) {
         header: true,
         dynamicTyping: true,
         complete: function(results) {
-            console.log("CSV cargado. Primeras filas:", results.data.slice(0, 3));
-            console.log("Columnas disponibles:", Object.keys(results.data[0] || {}));
             procesarDatos(results.data);
-            modalTexto.innerText = "✔ Datos listos - Aplica cortes acumulativos";
+            modalTexto.innerText = `${nombreMuestra} — Datos listos`;
             bloqueado = false;
         },
         error: function(error) {
@@ -907,16 +979,28 @@ function seleccionar(el) {
     });
 }
 
+function resetVista() {
+    datosActuales = [...datosOriginales];
+    listaCortes = [];
+    escalaLog = false;
+    document.getElementById('btnLin').classList.add('activo');
+    document.getElementById('btnLog').classList.remove('activo');
+    document.getElementById('numBins').value = 50;
+    document.getElementById('binsValDisplay').textContent = '50';
+    document.getElementById("panelCortes").style.display = "none";
+    document.getElementById("contenedorBins").style.display = "none";
+    document.getElementById("grafica").style.display = "none";
+    document.getElementById("listaCortes-container").style.display = "none";
+}
+
 function cerrarModal() {
     modal.classList.remove("activo");
+    modal.style.pointerEvents = "none";
     bloqueado = false;
-    habilitado = false; 
-    btnMestras.disabled = false;
-    sidebar.classList.remove("abierto");
-    document.body.classList.remove("sidebar-abierto");
     titulo.classList.remove("arriba");
-    document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
-
+    document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa")); 
+    document.querySelectorAll(".grupo-header").forEach(e => e.classList.remove("bloqueado"));
+    // habilitado sigue siendo true → sidebar permanece activo
 }
 
 document.addEventListener("contextmenu", e => {
@@ -928,6 +1012,12 @@ document.addEventListener("contextmenu", e => {
         habilitado = false;
         bloqueado = false;
         document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
+        document.querySelectorAll(".grupo-header").forEach(el => el.classList.add("bloqueado"));
+        document.querySelectorAll(".grupo-body.abierto").forEach(body => {
+            body.classList.remove("abierto");
+            const flecha = document.getElementById("flecha-" + body.id);
+            if (flecha) flecha.textContent = "▶";
+        });
     }
 });
 
@@ -938,6 +1028,13 @@ graficaDiv.addEventListener("mouseenter", () => {
 graficaDiv.addEventListener("mouseleave", () => {
     Plotly.relayout("grafica", { scrollZoom: false });
 });
+
+function toggleGrupo(id) {
+    const body = document.getElementById(id);
+    const flecha = document.getElementById("flecha-" + id);
+    const abierto = body.classList.toggle("abierto");
+    flecha.textContent = abierto ? "▼" : "▶";
+}
 </script>
 
 </body>
