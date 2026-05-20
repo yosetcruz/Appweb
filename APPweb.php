@@ -176,6 +176,7 @@ body {
    flex-direction: column;
    color: white;
    padding: 10px 40px 40px 40px;
+   box-sizing:border-box;
    background: radial-gradient(circle at 30% 30%, rgba(0,198,255,0.4), rgba(0,198,255,0) 40%),
                radial-gradient(circle at 70% 70%, rgba(0,114,255,0.4), rgba(0,114,255,0) 40%),
                linear-gradient(to bottom, #001f3f, #000814);
@@ -204,10 +205,10 @@ body {
 .cerrar {
     position: fixed;
     top: 1px;
-    right: 1px;
+    right: 15px;
     background: red;
     color: white;
-    padding: 8px 12px;
+    padding: 6px 6px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -219,15 +220,15 @@ body {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
     border-radius: 10px;
-    margin: 20px 0;
-    width: 100%;
-    box-sizing: border-box; 
+    margin: 0 20px 0 0;
+    box-sizing: border-box;
+    flex: 1;
 }
 
 .panel-cortes select, .panel-cortes input {
-    margin: 10px;
-    padding: 8px;
-    font-size: 14px;
+    margin: 0;
+    padding: 6px;
+    font-size: 13px;
 }
 
 .lista-cortes {
@@ -271,6 +272,8 @@ body {
     height: 500px;
     margin-top: 20px;
     cursor: default;
+    padding-right: 20px;
+    box-sizing: border-box;
 }
 
 .boton-peligro {
@@ -290,9 +293,13 @@ body.sidebar-abierto #layout {
     background: rgba(0, 0, 0, 0.7);
     padding: 15px;
     border-radius: 10px;
-    margin: 10px 0;
-    width: 100%;
+    margin: 0;
     box-sizing: border-box;
+    min-width:260px;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .selector-grafica select {
@@ -460,12 +467,12 @@ body.sidebar-abierto #layout {
 
         <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
 
-        <div class="modal-body">
+        <div class="modal-body" style="width:100%; box-sizing:border-box;">
             <div class="modal-header">
                 <p id="modalTexto"></p>
             </div>
             <div class="contenedor-central">
-
+                <div style="display:flex; gap:16px; align-items:stretch; width:100%; box-sizing:border-box; margin-left:-30px;">
                 <div class="selector-grafica">
                     <h3>Opciones de visualización</h3>
                     <div class="control-row">
@@ -477,38 +484,43 @@ body.sidebar-abierto #layout {
 
                 <div class="panel-cortes" id="panelCortes" style="display:none">
                     <h3>Aplicar Nuevo Corte</h3>
-                    <label>Variable:</label>
-                    <select id="variable" disabled></select>
-                    <label>Operador:</label>
-                    <select id="operador">
-                        <option value=">">&gt; (mayor que)</option>
-                        <option value="<">&lt; (menor que)</option>
-                        <option value=">=">&gt;= (mayor o igual)</option>
-                        <option value="<=">&lt;= (menor o igual)</option>
-                        <option value="abs_lt">|x| &lt; (valor absoluto)</option>
-                    </select>
-                    <label>Valor:</label>
-                    <input type="number" id="valor" value="20" step="any">
-                    <button class="boton boton-exito" onclick="aplicarCorteAcumulativo()">Aplicar corte</button>
-                </div>
-
-                <div id="contenedorBins" style="display:none; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
-                    <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <label style="font-size:13px; white-space:nowrap;">Bins:</label>
-                        <input type="range" id="numBins" min="5" max="200" value="50" step="1"
-                        style="width:110px; accent-color:#00c6ff;"
-                        oninput="document.getElementById('binsValDisplay').textContent = this.value">
-                        <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <label style="font-size:13px;">Escala:</label>
-                        <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
-                        <button class="escala-btn" id="btnLog" onclick="setEscala('log')">Logarítmica</button>
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:nowrap;">
+                        <label>Variable:</label>
+                        <select id="variable" disabled></select>
+                        <label>Operador:</label>
+                        <select id="operador" style="max-width: 130px;>
+                            <option value=">">&gt; (mayor que)</option>
+                            <option value="<">&lt; (menor que)</option>
+                            <option value=">=">&gt;= (mayor o igual)</option>
+                            <option value="<=">&lt;= (menor o igual)</option>
+                            <option value="abs_lt">|x| &lt; (valor absoluto)</option>
+                        </select>
+                        <label>Valor:</label>
+                        <input type="number" id="valor" value="20" step="any" style="width:80px;">
+                        <button class="boton boton-exito" onclick="aplicarCorteAcumulativo()">Aplicar corte</button>
                     </div>
                 </div>
+            </div>
 
-                <div id="grafica" style="display:none"></div>
+            <div id="contenedorBins" style="display:none; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
+                <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <label style="font-size:13px; white-space:nowrap;">Bins:</label>
+                    <input type="range" id="numBins" min="5" max="200" value="50" step="1"
+                           style="width:110px; accent-color:#00c6ff;"
+                           oninput="document.getElementById('binsValDisplay').textContent = this.value">
+                    <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">   <!-- ✅ escala DENTRO de contenedorBins -->
+                    <label style="font-size:13px;">Escala:</label>
+                    <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
+                    <button class="escala-btn" id="btnLog" onclick="setEscala('log')">Logarítmica</button>
+                </div>
+            </div>
+            
+            <div id="grafica" style="display:none"></div>
+                
+            </div>
 
                 <div class="lista-cortes" id="listaCortes-container" style="display:none">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -516,8 +528,9 @@ body.sidebar-abierto #layout {
                         <button class="boton boton-peligro boton-pequeno" onclick="reiniciarCortes()">Reiniciar todos los cortes</button>
                     </div>
                     <div id="listaCortes"></div>
-                    <div id="infoEventos" style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 5px;"></div>
+                    <div id="infoEventos" style="margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
                 </div>
+            </div>
 
             </div>
         </div>
@@ -608,7 +621,6 @@ function procesarDatos(data) {
     datosOriginales = [...data];
     datosActuales = [...data];
     listaCortes = [];
-    modalTexto.innerText = `Listo`;
 }
 
 function confirmarVariable() {
@@ -626,8 +638,8 @@ function confirmarVariable() {
         selectVariable.value = varSeleccionada;
         selectVariable.disabled = true;
     }
-
-    document.getElementById("panelCortes").style.display = "block";
+    
+    document.getElementById("panelCortes").style.display = "block"; 
     document.getElementById("contenedorBins").style.display = "flex";
     document.getElementById("grafica").style.display = "block";
     document.getElementById("listaCortes-container").style.display = "block";
@@ -701,8 +713,6 @@ function aplicarCorteAcumulativo() {
     // Actualizar UI
     actualizarListaCortes();
     dibujarHistogramaCompleto();
-    
-    modalTexto.innerText = `Corte aplicado: ${listaCortes[listaCortes.length-1].descripcion} | Eventos: ${datosActuales.length}`;
 }
 
 function reiniciarCortes() {
@@ -715,7 +725,6 @@ function reiniciarCortes() {
     listaCortes = [];
     actualizarListaCortes();
     dibujarHistogramaCompleto();
-    modalTexto.innerText = `🔄 Cortes reiniciados. Eventos: ${datosActuales.length}`;
 }
 
 function eliminarCorte(indice) {
@@ -757,7 +766,6 @@ function eliminarCorte(indice) {
     
     actualizarListaCortes();
     dibujarHistogramaCompleto();
-    modalTexto.innerText = `Corte eliminado. Eventos: ${datosActuales.length}`;
 }
 
 function actualizarListaCortes() {
@@ -958,6 +966,7 @@ function seleccionar(el) {
     titulo.classList.add("arriba");
 
     const archivo = el.dataset.file;
+    limpiarVistaCargando();
     modalTexto.innerText = "Cargando datos...";
     modal.style.pointerEvents = "auto";
     modal.classList.add("activo");
@@ -1028,6 +1037,34 @@ graficaDiv.addEventListener("mouseenter", () => {
 graficaDiv.addEventListener("mouseleave", () => {
     Plotly.relayout("grafica", { scrollZoom: false });
 });
+
+function limpiarVistaCargando() {
+    datosOriginales = [];
+    datosActuales = [];
+    listaCortes = [];
+    columnasDisponibles = [];
+    escalaLog = false;
+
+    document.getElementById('btnLin').classList.add('activo');
+    document.getElementById('btnLog').classList.remove('activo');
+    document.getElementById('numBins').value = 50;
+    document.getElementById('binsValDisplay').textContent = '50';
+
+    document.getElementById("variableGrafica").innerHTML = "";
+    document.getElementById("variable").innerHTML = "";
+
+    document.getElementById("panelCortes").style.display = "none";
+    document.getElementById("contenedorBins").style.display = "none";
+    document.getElementById("grafica").style.display = "none";
+    document.getElementById("listaCortes-container").style.display = "none";
+
+    if (document.getElementById("grafica")._fullLayout) {
+        Plotly.purge("grafica");
+    }
+
+    document.getElementById("listaCortes").innerHTML = "";
+    document.getElementById("infoEventos").innerHTML = "";
+}
 
 function toggleGrupo(id) {
     const body = document.getElementById(id);
