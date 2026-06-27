@@ -417,6 +417,35 @@ body.sidebar-abierto #layout {
     box-sizing: border-box;
     padding: 0;
 }
+
+#btnAyuda {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    z-index: 150;
+    box-shadow: 0 4px 15px rgba(0,198,255,0.5);
+    transition: transform 0.2s;
+}
+
+#btnAyuda:hover {
+    transform: scale(1.1);
+}
+
+#btnAyuda:disabled {
+    opacity: 0.3;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
 </style>
 </head>
 
@@ -451,8 +480,9 @@ body.sidebar-abierto #layout {
     <div class="grupo-body" id="g2muones">
         <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Muestra 1</div>
         <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Muestra 2</div>
-        <div class="muestra" data-file="csv/muestra3.csv" onclick="seleccionar(this)">Muestra 3</div>
+        
     </div>
+
 
     <div class="grupo-header bloqueado" onclick="toggleGrupo('g4muones')">
         4 Muones <span id="flecha-g4muones">▶</span> 
@@ -460,6 +490,8 @@ body.sidebar-abierto #layout {
     <div class="grupo-body" id="g4muones">
 
     </div>    
+    
+
 </div>
 
 <div id="modal" class="modal">
@@ -565,6 +597,7 @@ function habilitarMuestras() {
     document.body.classList.add("sidebar-abierto");
     document.querySelectorAll(".muestra").forEach(el => el.classList.add("activa"));
     document.querySelectorAll(".grupo-header").forEach(el => el.classList.remove("bloqueado"));
+    document.getElementById("btnAyuda").disabled = true;
 }
 
 
@@ -630,13 +663,21 @@ function confirmarVariable() {
     }
 
     const varSeleccionada = document.getElementById("variableGrafica").value;
-    const selectVariable = document.getElementById("variable");
+    const selectCorte = document.getElementById("variable");
 
-    if (varSeleccionada === "M") {
-        selectVariable.disabled = false;
+    selectCorte.innerHTML = "";
+    columnasDisponibles.filter(c => c !== "M").forEach(col => {
+        const opt = document.createElement("option");
+        opt.value = col;
+        opt.textContent = col; 
+        selectCorte.appendChild(opt);
+    });
+
+    if (varSeleccionada !== "M") {
+        selectCorte.value = varSeleccionada; 
+        selectCorte.disabled = true;
     } else {
-        selectVariable.value = varSeleccionada;
-        selectVariable.disabled = true;
+        selectCorte.disabled = false;
     }
     
     document.getElementById("panelCortes").style.display = "block"; 
@@ -1009,6 +1050,7 @@ function cerrarModal() {
     titulo.classList.remove("arriba");
     document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa")); 
     document.querySelectorAll(".grupo-header").forEach(e => e.classList.remove("bloqueado"));
+    document.getElementById("btnAyuda").disabled = false;
     // habilitado sigue siendo true → sidebar permanece activo
 }
 
@@ -1027,6 +1069,7 @@ document.addEventListener("contextmenu", e => {
             const flecha = document.getElementById("flecha-" + body.id);
             if (flecha) flecha.textContent = "▶";
         });
+         document.getElementById("btnAyuda").disabled = false;
     }
 });
 
@@ -1072,7 +1115,356 @@ function toggleGrupo(id) {
     const abierto = body.classList.toggle("abierto");
     flecha.textContent = abierto ? "▼" : "▶";
 }
+
+function abrirAyuda() {
+    document.getElementById("modalAyuda").style.display = "flex";
+}
+
+function cerrarAyuda() {
+    document.getElementById("modalAyuda").style.display = "none";
+}
+
+function cambiarTab(tab) {
+    const tabs = ['guia', 'fisica', 'analisis', 'simulacion'];
+    tabs.forEach(t => {
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const contenido = document.getElementById('contenido' + t.charAt(0).toUpperCase() + t.slice(1));
+        const activo = t === tab;
+        contenido.style.display = activo ? 'block' : 'none';
+        btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
+        btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
+        btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
+    });
+    if (tab === 'simulacion') iniciarSimulacion();
+    else detenerSimulacion();
+}
+
+// ── Simulación CMS ──
+let animCMS = null;
+let particulasCMS = [];
+
+function iniciarSimulacion() {
+    const canvas = document.getElementById('canvasCMS');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const R = canvas.width / 2 - 4;
+
+    canvas.onclick = () => dispararColision(cx, cy);
+
+    function dispararColision(x, y) {
+        const nMuones = 2 + Math.floor(Math.random() * 3);
+        const nOtras  = 4 + Math.floor(Math.random() * 8);
+        for (let i = 0; i < nMuones; i++) {
+            const ang = Math.random() * Math.PI * 2;
+            particulasCMS.push({ x, y, vx: Math.cos(ang) * 3.5, vy: Math.sin(ang) * 3.5,
+                color: '#ff4466', ancho: 2.2, life: 1, decay: 0.008, tipo: 'muon' });
+            particulasCMS.push({ x, y, vx: -Math.cos(ang) * 3.5, vy: -Math.sin(ang) * 3.5,
+                color: '#ff4466', ancho: 2.2, life: 1, decay: 0.008, tipo: 'muon' });
+        }
+        for (let i = 0; i < nOtras; i++) {
+            const ang = Math.random() * Math.PI * 2;
+            const vel = 1.5 + Math.random() * 2.5;
+            particulasCMS.push({ x, y, vx: Math.cos(ang) * vel, vy: Math.sin(ang) * vel,
+                color: `hsl(${180 + Math.random()*60},80%,65%)`, ancho: 1.2,
+                life: 1, decay: 0.006 + Math.random() * 0.006, tipo: 'otra' });
+        }
+    }
+
+    function dibujarDetector(ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Fondo
+        const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
+        bg.addColorStop(0, '#000d1a');
+        bg.addColorStop(1, '#000508');
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.fillStyle = bg;
+        ctx.fill();
+
+        // Capas del detector
+        const capas = [
+            { r: R * 0.18, color: 'rgba(0,198,255,0.15)', label: 'Tracker' },
+            { r: R * 0.38, color: 'rgba(0,198,255,0.10)', label: 'ECAL' },
+            { r: R * 0.58, color: 'rgba(0,198,255,0.08)', label: 'HCAL' },
+            { r: R * 0.80, color: 'rgba(0,198,255,0.06)', label: 'Solenoide' },
+            { r: R * 0.97, color: 'rgba(0,198,255,0.05)', label: 'Muon' },
+        ];
+
+        capas.forEach(c => {
+            ctx.beginPath();
+            ctx.arc(cx, cy, c.r, 0, Math.PI * 2);
+            ctx.strokeStyle = c.color.replace(')', ', 0.6)').replace('rgba', 'rgba');
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.fillStyle = c.color;
+            ctx.fill();
+
+            // Etiqueta
+            ctx.fillStyle = 'rgba(0,198,255,0.35)';
+            ctx.font = '10px Arial';
+            ctx.fillText(c.label, cx + c.r * 0.72, cy - 4);
+        });
+
+        // Líneas radiales de referencia
+        for (let i = 0; i < 24; i++) {
+            const ang = (i / 24) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(ang) * R * 0.97, cy + Math.sin(ang) * R * 0.97);
+            ctx.strokeStyle = 'rgba(0,198,255,0.04)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // Punto central (IP)
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.fill();
+    }
+
+    function dibujarParticulas(ctx) {
+        particulasCMS = particulasCMS.filter(p => p.life > 0);
+        particulasCMS.forEach(p => {
+            ctx.beginPath();
+            ctx.moveTo(p.x - p.vx * 3, p.y - p.vy * 3);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = p.color.includes('hsl')
+                ? p.color.replace(')', `, ${p.life})` ).replace('hsl', 'hsla')
+                : p.color + Math.floor(p.life * 255).toString(16).padStart(2,'0');
+            ctx.lineWidth = p.ancho * p.life;
+            ctx.stroke();
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= p.decay;
+            const dist = Math.hypot(p.x - cx, p.y - cy);
+            if (dist > R) p.life = 0;
+        });
+    }
+
+    // Colisión automática periódica
+    let timer = 0;
+    function loop() {
+        dibujarDetector(ctx);
+        dibujarParticulas(ctx);
+        timer++;
+        if (timer % 90 === 0) dispararColision(cx, cy);
+        animCMS = requestAnimationFrame(loop);
+    }
+
+    if (animCMS) cancelAnimationFrame(animCMS);
+    particulasCMS = [];
+    dispararColision(cx, cy);
+    loop();
+}
+
+function detenerSimulacion() {
+    if (animCMS) {
+        cancelAnimationFrame(animCMS);
+        animCMS = null;
+    }
+    particulasCMS = [];
+}
+
 </script>
+<button id="btnAyuda" onclick="abrirAyuda()" title="Ayuda">?</button>
+
+<div id="modalAyuda" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,10,30,1); z-index:200; justify-content:center; align-items:center;">
+     <div style="display:flex; flex-direction:column; width:700px; max-width:90%; max-height:90vh;">
+
+        <!-- Botón cerrar FUERA de la tarjeta -->
+        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+            <button onclick="cerrarAyuda()"
+                style="background:red; color:white; border:none; border-radius:6px;
+                       padding:5px 12px; cursor:pointer; font-size:12px; font-weight:bold;">
+                ✕ Cerrar
+            </button>
+        </div>
+
+        <!-- Tarjeta principal -->
+        <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
+                    border-radius:14px; overflow:hidden;
+                    border:1px solid rgba(0,198,255,0.3);">
+
+            <!-- Pestañas -->
+            <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
+                <button id="tabGuia" onclick="cambiarTab('guia')"
+                    style="flex:1; padding:14px; background:rgba(0,198,255,0.2); color:#00c6ff;
+                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                           border-bottom:3px solid #00c6ff;">
+                    Guía de uso
+                </button>
+                <button id="tabFisica" onclick="cambiarTab('fisica')"
+                    style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
+                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                           border-bottom:3px solid transparent;">
+                    Conceptos físicos
+                </button>
+                    
+                <button id="tabAnalisis" onclick="cambiarTab('analisis')"
+                style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
+                border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                border-bottom:3px solid transparent;">
+                    Acerca del análisis
+                </button>
+                
+                <button id="tabSimulacion" onclick="cambiarTab('simulacion')"
+                style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
+                border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                border-bottom:3px solid transparent;">
+                Simulación
+                </button>
+
+            </div>
+
+            <!-- Contenido pestaña Guía -->
+            <div id="contenidoGuia" style="padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
+                <h2 style="color:#00c6ff; margin-top:0;">¿Cómo usar la aplicación?</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
+                    Esta aplicación te permite explorar datos reales del detector CMS del CERN, analizando colisiones de partículas subatómicas mediante histogramas y filtros interactivos.
+                </p>
+                <ol style="padding-left:20px;">
+                    <li style="margin-bottom:14px;">
+                        <strong>Comenzar</strong><br>
+                        Haz clic en el botón <em>"Comenzar"</em> en el centro de la pantalla. Esto abre el panel lateral izquierdo con las muestras disponibles.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Seleccionar muestra</strong><br>
+                        En el panel lateral verás dos grupos: <em>"2 Muones"</em> y <em>"4 Muones"</em>. Haz clic en un grupo para desplegarlo y luego selecciona una muestra. Cada muestra es un conjunto de miles de eventos registrados por el detector CMS. Los datos se cargarán automáticamente.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Elegir variable a graficar</strong><br>
+                        Una vez cargados los datos, aparecerá el panel <em>"Opciones de visualización"</em>. Elige la variable que deseas explorar en el menú desplegable y haz clic en <em>"Ver histograma"</em>. Las variables disponibles son propiedades cinemáticas de los muones (pt, eta, phi) o la masa invariante calculada (M).
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Aplicar cortes de selección</strong><br>
+                        El panel <em>"Aplicar Nuevo Corte"</em> te permite filtrar los eventos. Selecciona una variable, un operador de comparación (mayor que, menor que, etc.) y un valor numérico, luego haz clic en <em>"Aplicar corte"</em>. Los cortes son acumulativos: cada uno se aplica sobre los eventos que sobrevivieron el anterior, permitiéndote refinar progresivamente tu selección.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Ajustar bins y escala</strong><br>
+                        El deslizador de <em>"Bins"</em> controla cuántas divisiones tiene el histograma: más bins = más detalle pero más ruido; menos bins = más suavizado. La escala <em>Lineal</em> es útil para ver la forma general; la <em>Logarítmica</em> permite visualizar estructuras en rangos de valores muy diferentes.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Gestionar cortes aplicados</strong><br>
+                        El panel <em>"Cortes Aplicados"</em> muestra todos los filtros activos con el número de eventos antes y después de cada uno. Puedes eliminar un corte individual con el botón ✖, o reiniciar todos con <em>"Reiniciar todos los cortes"</em>. El histograma siempre muestra en azul los datos originales y en rojo los datos filtrados.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Volver al inicio</strong><br>
+                        Haz clic en el botón <em>"✕ Cerrar"</em> para regresar al panel de selección de muestras, o haz <em>clic derecho</em> en cualquier parte fuera del análisis para volver a la pantalla principal.
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Contenido pestaña Física -->
+            <div id="contenidoFisica" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
+                <h2 style="color:#00c6ff; margin-top:0;">Conceptos físicos</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
+                    Entender estos conceptos te ayudará a interpretar mejor los resultados.
+                </p>
+
+                <h3 style="color:#00c6ff;">¿Qué es el CMS y el LHC?</h3>
+                <p>El <strong>LHC</strong> (Large Hadron Collider) es el acelerador de partículas más grande del mundo, ubicado en el CERN (Ginebra, Suiza). Acelera protones a velocidades cercanas a la de la luz y los hace colisionar. El <strong>CMS</strong> (Compact Muon Solenoid) es uno de los detectores que registra los productos de esas colisiones, incluyendo los muones.</p>
+
+                <h3 style="color:#00c6ff;">¿Qué es un muón?</h3>
+                <p>El muón es una partícula elemental de la misma familia que el electrón, pero con una masa ~207 veces mayor. Es estable el tiempo suficiente para atravesar el detector completo, lo que lo hace muy útil para el análisis. Cada evento contiene uno o más muones con propiedades medidas:</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:8px;"><strong>pt — Momento transverso</strong> (GeV/c): Es la componente del momento perpendicular al haz. Muones con alto pt provienen típicamente de decaimientos de partículas pesadas.</li>
+                    <li style="margin-bottom:8px;"><strong>η — Pseudorapidez</strong>: Describe el ángulo de emisión respecto al haz. Valores cercanos a 0 son perpendiculares al haz; valores altos (|η| > 2) son más paralelos. El CMS detecta muones hasta |η| ≈ 2.4.</li>
+                    <li style="margin-bottom:8px;"><strong>φ — Ángulo azimutal</strong> (radianes): Es el ángulo alrededor del eje del haz. En colisiones sin sesgo, los muones se distribuyen uniformemente en φ.</li>
+                </ul>
+
+                <h3 style="color:#00c6ff;">Masa invariante</h3>
+                <p>Cuando dos muones provienen del decaimiento de una misma partícula, podemos reconstruir la masa de esa partícula original. Esta cantidad se llama <strong>masa invariante M</strong> y se calcula como:</p>
+                <p style="background:rgba(0,198,255,0.1); padding:12px 16px; border-radius:8px; font-family:monospace; font-size:15px;">
+                    M² = 2 · pt₁ · pt₂ · (cosh(η₁ − η₂) − cos(φ₁ − φ₂))
+                </p>
+                <p>Un <strong>pico en el histograma de M</strong> indica que muchos pares de muones tienen esa masa, revelando la existencia de una partícula conocida:</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:6px;"><strong>J/ψ (~3.1 GeV)</strong>: mesón compuesto por un quark charm y su antiquark.</li>
+                    <li style="margin-bottom:6px;"><strong>Υ (Upsilon, ~9.5 GeV)</strong>: mesón compuesto por un quark bottom y su antiquark.</li>
+                    <li style="margin-bottom:6px;"><strong>Z (~91 GeV)</strong>: bosón mediador de la fuerza débil, una de las partículas más importantes del Modelo Estándar.</li>
+                </ul>
+
+                <h3 style="color:#00c6ff;">Cortes de selección</h3>
+                <p>Los <strong>cortes</strong> son criterios de filtrado para mejorar la calidad de los datos o aislar una señal eliminando el "ruido de fondo":</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:8px;"><strong>pt &gt; valor</strong>: Elimina muones de baja energía que suelen provenir de procesos de fondo.</li>
+                    <li style="margin-bottom:8px;"><strong>|η| &lt; 2.4</strong>: Restringe los eventos a la región geométrica donde el CMS mide con buena precisión.</li>
+                    <li style="margin-bottom:8px;"><strong>φ uniforme</strong>: Si la distribución en φ no es uniforme tras los cortes, puede indicar ineficiencias del detector.</li>
+                </ul>
+                <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:16px;">
+                     <em>Tip: Aplica primero cortes en pt y η, y luego observa cómo cambia el histograma de masa invariante. ¡Así es exactamente como trabajan los científicos del CERN!</em>
+                </p>
+            </div>
+            <!-- Contenido pestaña Análisis -->
+             <div id="contenidoAnalisis" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
+                <h2 style="color:#00c6ff; margin-top:0;">Acerca del análisis</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
+                    Esta aplicación reproduce, de forma simplificada, el flujo de trabajo real que usan los físicos del CERN para identificar partículas subatómicas a partir de datos del detector CMS.
+                </p>
+
+                <h3 style="color:#00c6ff;">¿Qué tipo de datos se analizan?</h3>
+                <p>Los datos provienen de colisiones protón-protón registradas por el detector CMS durante operaciones del LHC. Cada <strong>evento</strong> representa una colisión individual y contiene las propiedades cinemáticas de los muones producidos: momento transverso (pt), pseudorapidez (η) y ángulo azimutal (φ).</p>
+
+                <h3 style="color:#00c6ff;">Flujo del análisis</h3>
+                <ol style="padding-left:20px;">
+                    <li style="margin-bottom:12px;">
+                        <strong>Carga de datos</strong><br>
+                        Se leen archivos CSV con miles de eventos reales del CMS. Cada fila es un evento con las variables cinemáticas de los muones detectados.
+                    </li>
+                    <li style="margin-bottom:12px;">
+                        <strong>Cálculo de la masa invariante</strong><br>
+                        A partir de pt, η y φ de cada par de muones, la aplicación calcula automáticamente la masa invariante M usando la fórmula relativista. Esta es la variable clave para identificar partículas.
+                    </li>
+                    <li style="margin-bottom:12px;">
+                        <strong>Exploración cinemática</strong><br>
+                        Antes de buscar señales, se estudian las distribuciones de pt, η y φ para entender la calidad de los datos y la cobertura del detector. Esto permite identificar regiones donde el detector es menos eficiente.
+                    </li>
+                    <li style="margin-bottom:12px;">
+                        <strong>Aplicación de cortes</strong><br>
+                        Se aplican filtros (cortes) sobre las variables cinemáticas para seleccionar muones de buena calidad y reducir el ruido de fondo. Típicamente se requiere pt mínimo y |η| dentro de la aceptancia del detector.
+                    </li>
+                    <li style="margin-bottom:12px;">
+                        <strong>Reconstrucción de resonancias</strong><br>
+                        Con los cortes aplicados, se analiza el histograma de masa invariante M. Los picos que emergen corresponden a partículas reales que decayeron en dos muones: J/ψ (~3.1 GeV), Υ (~9.5 GeV) o Z (~91 GeV).
+                    </li>
+                    <li style="margin-bottom:12px;">
+                        <strong>Cutflow y eficiencia</strong><br>
+                        La aplicación lleva un registro del número de eventos que sobreviven cada corte. Esta tabla, llamada <em>cutflow</em>, permite evaluar cuánta señal se conserva y cuánto fondo se elimina con cada criterio de selección.
+                    </li>
+                </ol>
+                <h3 style="color:#00c6ff;">¿Por qué dos histogramas superpuestos?</h3>
+                <p>El histograma azul muestra siempre los datos <strong>originales sin cortes</strong>, mientras que el rojo muestra los datos <strong>después de los cortes aplicados</strong>. Esta superposición permite ver de forma inmediata el impacto de cada filtro sobre la distribución completa, facilitando la optimización de los criterios de selección.</p>
+                <h3 style="color:#00c6ff;">Conexión con la física real</h3>
+                <p>Este flujo de trabajo es una versión simplificada del análisis que llevó al descubrimiento del <strong>bosón de Higgs en 2012</strong> en el CERN. En ese análisis, los físicos buscaron picos en distribuciones de masa invariante de pares de bosones Z (cada uno decayendo en dos muones), exactamente como se hace aquí.</p>
+                
+                <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:16px; border-top:1px solid rgba(0,198,255,0.2); padding-top:14px;">
+                    <em>Los datos utilizados en esta aplicación son datos abiertos (Open Data) publicados oficialmente por el CERN a través del portal <strong>CERN Open Data</strong>, disponibles para uso educativo y de investigación.</em>
+                </p>
+            </div>
+             <!-- Contenido pestaña Simulación -->
+              <div id="contenidoSimulacion" style="display:none; padding:20px; overflow-y:auto; max-height:65vh; line-height:1.8; text-align:center;">
+                <h2 style="color:#00c6ff; margin-top:0;">Detector CMS</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:16px;">
+                    Vista frontal del detector CMS. Cada colisión produce pares de muones (trazas rojas) y otras partículas (trazas azules) que se alejan del punto de colisión central.
+                </p>
+                <canvas id="canvasCMS" width="500" height="500"
+                style="border-radius:50%; border:2px solid rgba(0,198,255,0.4);
+                box-shadow:0 0 30px rgba(0,198,255,0.3); cursor:pointer;"
+                title="Clic para disparar una colisión manual">
+            </canvas>
+            <p style="color:rgba(255,255,255,0.4); font-size:12px; margin-top:10px;">
+                Haz clic en el detector para disparar una colisión 
+            </p>
+        </div>  
+    </div>
+</div>
+</div>
+
 
 </body>
 </html>
