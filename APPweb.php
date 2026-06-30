@@ -446,6 +446,166 @@ body.sidebar-abierto #layout {
     transform: none;
     box-shadow: none;
 }
+
+#btnSimulacion {
+    position: fixed;
+    bottom: 24px;
+    right: 76px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(to right, #ff8a1e, #ff3b3b);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    z-index: 150;
+    box-shadow: 0 4px 15px rgba(255,90,30,0.5);
+    transition: transform 0.2s;
+}
+ 
+#btnSimulacion:hover {
+    transform: scale(1.1);
+}
+ 
+#btnSimulacion:disabled {
+    opacity: 0.3;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+#modalSimulacion {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,10,30,1);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+}
+
+#modalSimulacion > div {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#modalSimulacion .modal-sim-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+#contenidoSimSimulacion {
+    flex: 1;
+    display: flex !important;
+    flex-direction: column;
+    padding: 10px !important;
+    overflow: hidden !important;
+    min-height: 0;
+}
+#cms3-root{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+#cms3-bar{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    padding:8px 12px;
+    background:#02040a;
+    border-bottom:1px solid #0d1f33
+}
+.c3-btn{
+    padding:5px 12px;
+    font-size:11px;
+    font-family:monospace;
+    background:transparent;
+    border:1px solid #123050;
+    color:#5590b8;
+    border-radius:4px;
+    cursor:pointer;
+    transition:.15s
+}
+.c3-btn:hover{
+    border-color:#1d4d80;
+    color:#7fbbe0
+}
+.c3-btn.active{
+    background:#0a2540;
+    border-color:#2d8fd6;
+    color:#5fc8ff
+}
+#cms3-canvas-wrap{
+    flex: 1;
+    min-height: 0;
+    position: relative;
+}
+#cms3-canvas-wrap canvas{
+    display:block;
+    width:100% !important;
+    height:100% !important;
+}
+#cms3-leg{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:7px 12px;
+    background:#02040a;
+    border-top:1px solid #0d1f33
+}
+.c3-leg{
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:10px;
+    color:#4a7494
+}
+.c3-sw{
+    width:18px;
+    height:3px;
+    border-radius:1px
+}
+#cms3-stats{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    padding:6px 12px;
+    background:#01030a;
+    border-top:1px solid #0d1f33
+}
+.c3-st{
+    font-size:10px;
+    color:#28526e
+}
+.c3-st b{
+    color:#3fb6e0;
+    font-weight:normal
+}
+#cms3-loading{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#3fb6e0;
+    font-size:12px;
+    background:#020509
+}
+
+
+
 </style>
 </head>
 
@@ -520,7 +680,7 @@ body.sidebar-abierto #layout {
                         <label>Variable:</label>
                         <select id="variable" disabled></select>
                         <label>Operador:</label>
-                        <select id="operador" style="max-width: 130px;>
+                        <select id="operador" style="max-width: 130px;">
                             <option value=">">&gt; (mayor que)</option>
                             <option value="<">&lt; (menor que)</option>
                             <option value=">=">&gt;= (mayor o igual)</option>
@@ -569,6 +729,7 @@ body.sidebar-abierto #layout {
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
@@ -598,6 +759,7 @@ function habilitarMuestras() {
     document.querySelectorAll(".muestra").forEach(el => el.classList.add("activa"));
     document.querySelectorAll(".grupo-header").forEach(el => el.classList.remove("bloqueado"));
     document.getElementById("btnAyuda").disabled = true;
+    document.getElementById("btnSimulacion").disabled = true;
 }
 
 
@@ -1051,6 +1213,7 @@ function cerrarModal() {
     document.querySelectorAll(".muestra").forEach(e => e.classList.add("activa")); 
     document.querySelectorAll(".grupo-header").forEach(e => e.classList.remove("bloqueado"));
     document.getElementById("btnAyuda").disabled = false;
+    document.getElementById("btnSimulacion").disabled = false;
     // habilitado sigue siendo true → sidebar permanece activo
 }
 
@@ -1070,6 +1233,7 @@ document.addEventListener("contextmenu", e => {
             if (flecha) flecha.textContent = "▶";
         });
          document.getElementById("btnAyuda").disabled = false;
+         document.getElementById("btnSimulacion").disabled = false;
     }
 });
 
@@ -1125,20 +1289,26 @@ function cerrarAyuda() {
 }
 
 function cambiarTab(tab) {
-    const tabs = ['guia', 'fisica', 'analisis', 'simulacion'];
+    const tabs = ['guia', 'analisis'];
     tabs.forEach(t => {
         const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
         const contenido = document.getElementById('contenido' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (!btn || !contenido) return;
         const activo = t === tab;
         contenido.style.display = activo ? 'block' : 'none';
         btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
         btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
         btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
     });
-    if (tab === 'simulacion') iniciarSimulacion();
-    else detenerSimulacion();
 }
-
+ 
+function abrirAyuda() {
+    document.getElementById("modalAyuda").style.display = "flex";
+}
+ 
+function cerrarAyuda() {
+    document.getElementById("modalAyuda").style.display = "none";
+}
 // ── Simulación CMS ──
 let animCMS = null;
 let particulasCMS = [];
@@ -1269,6 +1439,453 @@ function detenerSimulacion() {
     particulasCMS = [];
 }
 
+// ── Simulación 3D CMS ──────────────────────────────────────────
+(function(){
+ 
+var cms3Booted = false;
+var cms3RAF = null;
+ 
+function cms3Boot(){
+  if (typeof THREE === 'undefined') { setTimeout(cms3Boot, 60); return; }
+ 
+  var wrap = document.getElementById('cms3-canvas-wrap');
+  if (!wrap) return;
+  var loadingEl = document.getElementById('cms3-loading');
+  var W = wrap.clientWidth || 680, H = Math.round(W*10/16);
+ 
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020509);
+  scene.fog = new THREE.FogExp2(0x020509, 0.0009);
+ 
+  var camera = new THREE.PerspectiveCamera(42, W/H, 1, 5000);
+ 
+  var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
+  renderer.setSize(W, H);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  wrap.appendChild(renderer.domElement);
+  if (loadingEl) loadingEl.style.display = 'none';
+ 
+  /* ── Iluminación ── */
+  scene.add(new THREE.AmbientLight(0x40556a, 0.55));
+  var key = new THREE.DirectionalLight(0xbfe0ff, 0.9);
+  key.position.set(300, 400, 200);
+  scene.add(key);
+  var rim = new THREE.PointLight(0x3fb6ff, 1.1, 2000);
+  rim.position.set(-200, 100, -300);
+  scene.add(rim);
+  var ipLight = new THREE.PointLight(0xffffff, 0, 600);
+  scene.add(ipLight);
+ 
+  /* ── Escala geométrica del CMS ── */
+  var SCALE = 90;
+  var R = { pipe:.055, tracker:.28, ecal:.44, hcal:.60, sol:.68, m1:.78, m2:.88, m3:.975 };
+  var ZF = { pipe:.97, tracker:.90, ecal:.82, hcal:.74, sol:.66, m1:.59, m2:.52, m3:.44 };
+  var HZ = 1.35;
+ 
+  var group = new THREE.Group();
+  scene.add(group);
+ 
+  var wireMode = false;
+  var meshes = [];
+ 
+  function addCylinderLayer(rIn, rOut, halfLen, color, opacity, isMuon, radialSegs){
+    radialSegs = radialSegs || 56;
+    var geo = new THREE.CylinderGeometry(rOut*SCALE, rOut*SCALE, halfLen*2*SCALE, radialSegs, 1, true);
+    geo.rotateX(Math.PI/2);
+    var mat = new THREE.MeshPhysicalMaterial({
+      color: color,
+      transparent: true,
+      opacity: opacity,
+      metalness: isMuon ? 0.35 : 0.15,
+      roughness: isMuon ? 0.55 : 0.35,
+      side: THREE.DoubleSide,
+      emissive: color,
+      emissiveIntensity: 0.10
+    });
+    var mesh = new THREE.Mesh(geo, mat);
+    group.add(mesh);
+    meshes.push(mesh);
+ 
+    var edges = new THREE.EdgesGeometry(geo, 1);
+    var lineMat = new THREE.LineBasicMaterial({ color: color, transparent:true, opacity: Math.min(1, opacity*2.2) });
+    var lines = new THREE.LineSegments(edges, lineMat);
+    group.add(lines);
+    meshes.push(lines);
+ 
+    return mesh;
+  }
+ 
+  /* Capas en orden de fuera hacia dentro */
+  addCylinderLayer(0, R.m3,      HZ*ZF.m3,      0xff3333, 0.07, true, 48);
+  addCylinderLayer(0, R.m2,      HZ*ZF.m2,      0xff5555, 0.08, true, 48);
+  addCylinderLayer(0, R.m1,      HZ*ZF.m1,      0xff7777, 0.09, true, 48);
+  addCylinderLayer(0, R.sol,     HZ*ZF.sol,     0xffd24a, 0.16, false, 56);
+  addCylinderLayer(0, R.hcal,    HZ*ZF.hcal,    0xff8c1a, 0.14, false, 48);
+  addCylinderLayer(0, R.ecal,    HZ*ZF.ecal,    0x36d27a, 0.16, false, 48);
+  addCylinderLayer(0, R.tracker, HZ*ZF.tracker, 0x3fa0e8, 0.13, false, 40);
+  addCylinderLayer(0, R.pipe,    HZ*ZF.pipe,    0xcfcfcf, 0.45, false, 24);
+ 
+  /* Franjas tipo "hierro de retorno" sobre la capa muon exterior */
+  (function(){
+    var ringGroup = new THREE.Group();
+    var segs = 18;
+    for (var i=0;i<segs;i++){
+      var a0 = (i/segs)*Math.PI*2, a1 = ((i+0.55)/segs)*Math.PI*2;
+      var shape = new THREE.Shape();
+      var rO = R.m3*SCALE, rI = R.m1*SCALE;
+      shape.moveTo(Math.cos(a0)*rO, Math.sin(a0)*rO);
+      shape.absarc(0,0,rO,a0,a1,false);
+      shape.lineTo(Math.cos(a1)*rI, Math.sin(a1)*rI);
+      shape.absarc(0,0,rI,a1,a0,true);
+      var geo = new THREE.ShapeGeometry(shape);
+      var mat = new THREE.MeshBasicMaterial({
+        color: i%2===0 ? 0xe6e6e6 : 0xb33322,
+        transparent:true, opacity:0.05, side:THREE.DoubleSide
+      });
+      var capF = new THREE.Mesh(geo, mat);
+      capF.position.z = HZ*ZF.m3*SCALE;
+      ringGroup.add(capF);
+      var capB = capF.clone();
+      capB.position.z = -HZ*ZF.m3*SCALE;
+      ringGroup.add(capB);
+    }
+    group.add(ringGroup);
+  })();
+ 
+  /* Punto de interacción (IP) con halo */
+  var ipGeo = new THREE.SphereGeometry(2.4, 16, 16);
+  var ipMat = new THREE.MeshBasicMaterial({ color:0xffffff });
+  var ipMesh = new THREE.Mesh(ipGeo, ipMat);
+  group.add(ipMesh);
+ 
+  function makeGlowTexture(){
+    var c = document.createElement('canvas'); c.width=c.height=128;
+    var ctx = c.getContext('2d');
+    var g = ctx.createRadialGradient(64,64,0,64,64,64);
+    g.addColorStop(0,'rgba(255,255,255,1)');
+    g.addColorStop(0.3,'rgba(160,220,255,0.7)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,128,128);
+    return new THREE.CanvasTexture(c);
+  }
+ 
+  var haloMat = new THREE.SpriteMaterial({
+    map: makeGlowTexture(), color: 0x9fd9ff, transparent:true, opacity:0.0, depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  var halo = new THREE.Sprite(haloMat);
+  halo.scale.set(40,40,1);
+  group.add(halo);
+ 
+  /* Grilla de referencia sutil */
+  var gridGeo = new THREE.BufferGeometry();
+  var gridPts = [];
+  for (var gi=-6; gi<=6; gi++){
+    gridPts.push(gi*30,0,-HZ*1.1*SCALE, gi*30,0,HZ*1.1*SCALE);
+    gridPts.push(-R.m3*1.1*SCALE,0,gi*30, R.m3*1.1*SCALE,0,gi*30);
+  }
+  gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(gridPts,3));
+  var gridMat = new THREE.LineBasicMaterial({ color:0x0e3050, transparent:true, opacity:0.35 });
+  var grid = new THREE.LineSegments(gridGeo, gridMat);
+  scene.add(grid);
+ 
+  /* Ejes */
+  var axesHelper = new THREE.AxesHelper(70);
+  axesHelper.material.transparent = true;
+  axesHelper.material.opacity = 0.45;
+  scene.add(axesHelper);
+ 
+  /* ── Cámara orbital ── */
+  var camTheta = 0.7, camPhi = 0.42, camDist = 330;
+  var autoOn = false, dragging = false, lastX=0, lastY=0;
+ 
+  var PRESETS = {
+    front:{ theta:0, phi:0.001, dist:300 },
+    side: { theta:Math.PI/2, phi:0.001, dist:300 },
+    top:  { theta:0.001, phi:Math.PI/2-0.05, dist:330 },
+    iso:  { theta:0.7, phi:0.42, dist:330 }
+  };
+ 
+  function applyCamera(){
+    var x = camDist*Math.sin(camTheta)*Math.cos(camPhi);
+    var y = camDist*Math.sin(camPhi);
+    var z = camDist*Math.cos(camTheta)*Math.cos(camPhi);
+    camera.position.set(x,y,z);
+    camera.lookAt(0,0,0);
+  }
+  applyCamera();
+ 
+  window.cms3SetView = function(k){
+    var p = PRESETS[k];
+    camTheta = p.theta; camPhi = p.phi; camDist = p.dist;
+    document.querySelectorAll('.c3-btn[data-v]').forEach(function(b){ b.classList.remove('active'); });
+    var btn = document.querySelector('.c3-btn[data-v="'+k+'"]');
+    if (btn) btn.classList.add('active');
+  };
+ 
+  window.cms3ToggleAuto = function(){
+    autoOn = !autoOn;
+    document.getElementById('cms3-auto').classList.toggle('active', autoOn);
+  };
+ 
+  window.cms3ToggleWire = function(){
+    wireMode = !wireMode;
+    document.getElementById('cms3-wire').classList.toggle('active', wireMode);
+    meshes.forEach(function(m){
+      if (m.material && m.material.opacity !== undefined && m.type === 'Mesh'){
+        m.visible = !wireMode;
+      }
+    });
+  };
+ 
+  var canvas = renderer.domElement;
+  canvas.style.cursor = 'grab';
+ 
+  canvas.addEventListener('mousedown', function(e){
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+  });
+  window.addEventListener('mouseup', function(){ dragging=false; canvas.style.cursor='grab'; });
+  window.addEventListener('mousemove', function(e){
+    if (!dragging) return;
+    var dx = e.clientX-lastX, dy = e.clientY-lastY;
+    camTheta += dx*0.006;
+    camPhi = Math.max(-1.45, Math.min(1.45, camPhi - dy*0.006));
+    lastX = e.clientX; lastY = e.clientY;
+    document.querySelectorAll('.c3-btn[data-v]').forEach(function(b){ b.classList.remove('active'); });
+  });
+  canvas.addEventListener('wheel', function(e){
+    e.preventDefault();
+    camDist = Math.max(80, Math.min(900, camDist + e.deltaY*0.4));
+  }, { passive:false });
+ 
+  var touch0 = null;
+  canvas.addEventListener('touchstart', function(e){ e.preventDefault(); touch0 = e.touches[0]; }, {passive:false});
+  canvas.addEventListener('touchmove', function(e){
+    e.preventDefault();
+    if (!touch0) return;
+    var t = e.touches[0];
+    camTheta += (t.clientX-touch0.clientX)*0.008;
+    camPhi = Math.max(-1.45, Math.min(1.45, camPhi - (t.clientY-touch0.clientY)*0.008));
+    touch0 = t;
+  }, {passive:false});
+ 
+  canvas.addEventListener('click', function(){ if(!dragging) spawnCollision(); });
+ 
+  /* ── Partículas / trazas reales en 3D ── */
+  var activeTracks = [];
+  var cols=0, mus=0, jts=0, trks=0;
+ 
+  function rndDir(){
+    var th = Math.random()*Math.PI*2;
+    var ph = (Math.random()-0.5)*Math.PI*0.85;
+    return new THREE.Vector3(Math.cos(ph)*Math.cos(th), Math.sin(ph), Math.cos(ph)*Math.sin(th));
+  }
+ 
+  function buildHelixPoints(dir, curv, maxLen, steps){
+    var pts = [];
+    var pos = new THREE.Vector3(0,0,0);
+    var vel = dir.clone();
+    var stepLen = maxLen/steps;
+    for (var i=0;i<steps;i++){
+      pts.push(pos.clone());
+      var perp = new THREE.Vector3(-vel.z, 0, vel.x).normalize();
+      vel.addScaledVector(perp, curv*stepLen*0.02).normalize();
+      pos.addScaledVector(vel, stepLen);
+      var rxy = Math.sqrt(pos.x*pos.x + pos.y*pos.y);
+      if (rxy > R.tracker*SCALE*1.02 || Math.abs(pos.z) > HZ*SCALE*1.05) break;
+    }
+    return pts;
+  }
+ 
+  function buildStraightPoints(dir, maxRxy, maxZ, steps){
+    var pts = [];
+    var pos = new THREE.Vector3(0,0,0);
+    var stepLen = 6;
+    for (var i=0;i<steps;i++){
+      pts.push(pos.clone());
+      pos.addScaledVector(dir, stepLen);
+      var rxy = Math.sqrt(pos.x*pos.x + pos.y*pos.y);
+      if (rxy > maxRxy*SCALE || Math.abs(pos.z) > maxZ*SCALE) break;
+    }
+    return pts;
+  }
+ 
+  function makeTrackMesh(pts, color, lw){
+    if (pts.length < 2) return null;
+    var curve = new THREE.CatmullRomCurve3(pts);
+    var tubeGeo = new THREE.TubeGeometry(curve, Math.max(8,pts.length), lw, 6, false);
+    var mat = new THREE.MeshBasicMaterial({ color: color, transparent:true, opacity:1 });
+    var mesh = new THREE.Mesh(tubeGeo, mat);
+    group.add(mesh);
+    return { mesh: mesh, life:1, decay: 0.012 + Math.random()*0.01 };
+  }
+ 
+  function makeJetBar(dir, energy){
+    var rIn = R.ecal*SCALE, rOut = rIn + energy*R.hcal*SCALE*0.7;
+    var p0 = dir.clone().multiplyScalar(rIn);
+    var p1 = dir.clone().multiplyScalar(rOut);
+    var geo = new THREE.CylinderGeometry(2.2, 2.2, p0.distanceTo(p1), 8);
+    geo.translate(0, p0.distanceTo(p1)/2, 0);
+    geo.rotateX(Math.PI/2);
+    var mat = new THREE.MeshBasicMaterial({ color:0xffcc22, transparent:true, opacity:0.9 });
+    var mesh = new THREE.Mesh(geo, mat);
+    mesh.position.copy(p0);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), dir);
+    group.add(mesh);
+    return { mesh: mesh, life:1, decay: 0.006 };
+  }
+ 
+  function spawnCollision(){
+    cols++;
+    var elCol = document.getElementById('c3-col'); if (elCol) elCol.textContent = cols;
+ 
+    ipLight.intensity = 6;
+    haloMat.opacity = 0.95;
+    halo.scale.set(50,50,1);
+ 
+    var nT = 10 + Math.floor(Math.random()*12);
+    trks += nT; var elTrk = document.getElementById('c3-trk'); if (elTrk) elTrk.textContent = trks;
+    for (var i=0;i<nT;i++){
+      var d = rndDir();
+      var curv = (Math.random()>0.5?1:-1)*(0.3+Math.random()*0.9);
+      var pts = buildHelixPoints(d, curv, R.tracker*SCALE*1.3, 50);
+      var t = makeTrackMesh(pts, 0x3fb6ff, 0.45);
+      if (t) activeTracks.push(t);
+    }
+ 
+    var nMu = Math.random()<0.4 ? 2 : 0;
+    mus += nMu; var elMu = document.getElementById('c3-mu'); if (elMu) elMu.textContent = mus;
+    for (i=0;i<nMu;i++){
+      d = rndDir();
+      pts = buildStraightPoints(d, R.m3*1.01, HZ*1.02, 60);
+      t = makeTrackMesh(pts, 0xff3333, 0.7);
+      if (t){ t.decay = 0.007; activeTracks.push(t); }
+    }
+ 
+    var nEM = 3 + Math.floor(Math.random()*5);
+    for (i=0;i<nEM;i++){
+      d = rndDir();
+      pts = buildStraightPoints(d, R.ecal, HZ*ZF.ecal, 40);
+      t = makeTrackMesh(pts, 0x33ff8c, 0.5);
+      if (t){ t.decay = 0.018; activeTracks.push(t); }
+    }
+ 
+    var nJet = 2 + Math.floor(Math.random()*4);
+    jts += nJet; var elJet = document.getElementById('c3-jet'); if (elJet) elJet.textContent = jts;
+    for (var j=0;j<nJet;j++){
+      d = rndDir();
+      var E = 0.3 + Math.random()*0.7;
+      var nH = 5 + Math.floor(E*8);
+      for (var k=0;k<nH;k++){
+        var spread = 0.12 + Math.random()*0.1;
+        var dd = d.clone().add(new THREE.Vector3(
+          (Math.random()-0.5)*spread, (Math.random()-0.5)*spread, (Math.random()-0.5)*spread
+        )).normalize();
+        pts = buildStraightPoints(dd, R.hcal*0.62, HZ*0.74, 30);
+        var col = Math.random()>0.4 ? 0xffcc22 : 0xff8a1e;
+        t = makeTrackMesh(pts, col, 0.4);
+        if (t){ t.decay = 0.02; activeTracks.push(t); }
+      }
+      activeTracks.push(makeJetBar(d, E));
+    }
+ 
+    var nH2 = 3 + Math.floor(Math.random()*5);
+    for (i=0;i<nH2;i++){
+      d = rndDir();
+      pts = buildStraightPoints(d, R.hcal*0.63, HZ*0.74, 30);
+      t = makeTrackMesh(pts, 0xff8a1e, 0.35);
+      if (t){ t.decay = 0.022; activeTracks.push(t); }
+    }
+  }
+  window.cms3SpawnCollision = spawnCollision;
+ 
+  /* ── Loop ── */
+  var tick = 0;
+  function animate(){
+    cms3RAF = requestAnimationFrame(animate);
+ 
+    if (autoOn) camTheta += 0.0035;
+    applyCamera();
+ 
+    ipLight.intensity *= 0.90;
+    haloMat.opacity *= 0.90;
+    halo.scale.multiplyScalar(0.96);
+ 
+    for (var i=activeTracks.length-1;i>=0;i--){
+      var tr = activeTracks[i];
+      tr.life -= tr.decay;
+      if (tr.life <= 0){
+        group.remove(tr.mesh);
+        tr.mesh.geometry.dispose();
+        tr.mesh.material.dispose();
+        activeTracks.splice(i,1);
+      } else {
+        tr.mesh.material.opacity = Math.max(0, tr.life);
+      }
+    }
+ 
+    tick++;
+    if (tick % 95 === 0) spawnCollision();
+ 
+    renderer.render(scene, camera);
+  }
+ 
+  function handleResize(){
+    var w = wrap.clientWidth;
+    var h = wrap.clientHeight;
+    if (!w || !h) return;
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w,h);
+  }
+  window.addEventListener('resize', handleResize);
+ 
+  spawnCollision();
+  animate();
+}
+
+
+/* ── Integración con el sistema de pestañas existente ──────────────
+   Se conecta a la función cambiarTab() que ya tienes definida más
+   arriba en tu archivo, sin necesidad de tocarla. */
+var originalCambiarTab = window.cambiarTab;
+window.abrirSimulacionModal = function(){
+    document.getElementById('modalSimulacion').style.display = 'flex';
+    if (!cms3Booted){
+        cms3Booted = true;
+        setTimeout(function() {
+            cms3Boot();
+            // Redimensionar después de que el DOM se haya actualizado
+            setTimeout(handleResize, 100);
+        }, 50);
+    } else {
+        // Si ya está iniciado, solo redimensionar
+        setTimeout(handleResize, 100);
+    }
+};
+ 
+window.cerrarSimulacionModal = function(){
+    document.getElementById('modalSimulacion').style.display = 'none';
+};
+ 
+window.cambiarTabSim = function(tab){
+    const tabs = ['simulacion', 'fisica', 'guiasim'];
+    const idMap = { simulacion:'Simulacion', fisica:'Fisica', guiasim:'Guiasim' };
+    tabs.forEach(t => {
+        const suf = idMap[t];
+        const btn = document.getElementById('tabSim' + suf);
+        const contenido = document.getElementById('contenidoSim' + suf);
+        if (!btn || !contenido) return;
+        const activo = t === tab;
+        contenido.style.display = activo ? 'block' : 'none';
+        btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
+        btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
+        btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
+    });
+};
+
+})();
 </script>
 <button id="btnAyuda" onclick="abrirAyuda()" title="Ayuda">?</button>
 
@@ -1286,9 +1903,9 @@ function detenerSimulacion() {
         </div>
 
         <!-- Tarjeta principal -->
-        <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
-                    border-radius:14px; overflow:hidden;
-                    border:1px solid rgba(0,198,255,0.3);">
+         <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
+            border-radius:14px; overflow:hidden;
+            border:1px solid rgba(0,198,255,0.3);
 
             <!-- Pestañas -->
             <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
@@ -1298,25 +1915,12 @@ function detenerSimulacion() {
                            border-bottom:3px solid #00c6ff;">
                     Guía de uso
                 </button>
-                <button id="tabFisica" onclick="cambiarTab('fisica')"
-                    style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
-                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
-                           border-bottom:3px solid transparent;">
-                    Conceptos físicos
-                </button>
                     
                 <button id="tabAnalisis" onclick="cambiarTab('analisis')"
                 style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
                 border:none; font-size:15px; font-weight:bold; cursor:pointer;
                 border-bottom:3px solid transparent;">
                     Acerca del análisis
-                </button>
-                
-                <button id="tabSimulacion" onclick="cambiarTab('simulacion')"
-                style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
-                border:none; font-size:15px; font-weight:bold; cursor:pointer;
-                border-bottom:3px solid transparent;">
-                Simulación
                 </button>
 
             </div>
@@ -1359,52 +1963,11 @@ function detenerSimulacion() {
                 </ol>
             </div>
 
-            <!-- Contenido pestaña Física -->
-            <div id="contenidoFisica" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
-                <h2 style="color:#00c6ff; margin-top:0;">Conceptos físicos</h2>
-                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
-                    Entender estos conceptos te ayudará a interpretar mejor los resultados.
-                </p>
-
-                <h3 style="color:#00c6ff;">¿Qué es el CMS y el LHC?</h3>
-                <p>El <strong>LHC</strong> (Large Hadron Collider) es el acelerador de partículas más grande del mundo, ubicado en el CERN (Ginebra, Suiza). Acelera protones a velocidades cercanas a la de la luz y los hace colisionar. El <strong>CMS</strong> (Compact Muon Solenoid) es uno de los detectores que registra los productos de esas colisiones, incluyendo los muones.</p>
-
-                <h3 style="color:#00c6ff;">¿Qué es un muón?</h3>
-                <p>El muón es una partícula elemental de la misma familia que el electrón, pero con una masa ~207 veces mayor. Es estable el tiempo suficiente para atravesar el detector completo, lo que lo hace muy útil para el análisis. Cada evento contiene uno o más muones con propiedades medidas:</p>
-                <ul style="padding-left:20px;">
-                    <li style="margin-bottom:8px;"><strong>pt — Momento transverso</strong> (GeV/c): Es la componente del momento perpendicular al haz. Muones con alto pt provienen típicamente de decaimientos de partículas pesadas.</li>
-                    <li style="margin-bottom:8px;"><strong>η — Pseudorapidez</strong>: Describe el ángulo de emisión respecto al haz. Valores cercanos a 0 son perpendiculares al haz; valores altos (|η| > 2) son más paralelos. El CMS detecta muones hasta |η| ≈ 2.4.</li>
-                    <li style="margin-bottom:8px;"><strong>φ — Ángulo azimutal</strong> (radianes): Es el ángulo alrededor del eje del haz. En colisiones sin sesgo, los muones se distribuyen uniformemente en φ.</li>
-                </ul>
-
-                <h3 style="color:#00c6ff;">Masa invariante</h3>
-                <p>Cuando dos muones provienen del decaimiento de una misma partícula, podemos reconstruir la masa de esa partícula original. Esta cantidad se llama <strong>masa invariante M</strong> y se calcula como:</p>
-                <p style="background:rgba(0,198,255,0.1); padding:12px 16px; border-radius:8px; font-family:monospace; font-size:15px;">
-                    M² = 2 · pt₁ · pt₂ · (cosh(η₁ − η₂) − cos(φ₁ − φ₂))
-                </p>
-                <p>Un <strong>pico en el histograma de M</strong> indica que muchos pares de muones tienen esa masa, revelando la existencia de una partícula conocida:</p>
-                <ul style="padding-left:20px;">
-                    <li style="margin-bottom:6px;"><strong>J/ψ (~3.1 GeV)</strong>: mesón compuesto por un quark charm y su antiquark.</li>
-                    <li style="margin-bottom:6px;"><strong>Υ (Upsilon, ~9.5 GeV)</strong>: mesón compuesto por un quark bottom y su antiquark.</li>
-                    <li style="margin-bottom:6px;"><strong>Z (~91 GeV)</strong>: bosón mediador de la fuerza débil, una de las partículas más importantes del Modelo Estándar.</li>
-                </ul>
-
-                <h3 style="color:#00c6ff;">Cortes de selección</h3>
-                <p>Los <strong>cortes</strong> son criterios de filtrado para mejorar la calidad de los datos o aislar una señal eliminando el "ruido de fondo":</p>
-                <ul style="padding-left:20px;">
-                    <li style="margin-bottom:8px;"><strong>pt &gt; valor</strong>: Elimina muones de baja energía que suelen provenir de procesos de fondo.</li>
-                    <li style="margin-bottom:8px;"><strong>|η| &lt; 2.4</strong>: Restringe los eventos a la región geométrica donde el CMS mide con buena precisión.</li>
-                    <li style="margin-bottom:8px;"><strong>φ uniforme</strong>: Si la distribución en φ no es uniforme tras los cortes, puede indicar ineficiencias del detector.</li>
-                </ul>
-                <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:16px;">
-                     <em>Tip: Aplica primero cortes en pt y η, y luego observa cómo cambia el histograma de masa invariante. ¡Así es exactamente como trabajan los científicos del CERN!</em>
-                </p>
-            </div>
-            <!-- Contenido pestaña Análisis -->
+                        <!-- Contenido pestaña Análisis -->
              <div id="contenidoAnalisis" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">Acerca del análisis</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
-                    Esta aplicación reproduce, de forma simplificada, el flujo de trabajo real que usan los físicos del CERN para identificar partículas subatómicas a partir de datos del detector CMS.
+                    Esta aplicación reproduce, de forma simplificada, el flujo de trabajo real que usan los científicos  del CERN para identificar partículas subatómicas a partir de datos del detector CMS.
                 </p>
 
                 <h3 style="color:#00c6ff;">¿Qué tipo de datos se analizan?</h3>
@@ -1446,23 +2009,169 @@ function detenerSimulacion() {
                     <em>Los datos utilizados en esta aplicación son datos abiertos (Open Data) publicados oficialmente por el CERN a través del portal <strong>CERN Open Data</strong>, disponibles para uso educativo y de investigación.</em>
                 </p>
             </div>
-             <!-- Contenido pestaña Simulación -->
-              <div id="contenidoSimulacion" style="display:none; padding:20px; overflow-y:auto; max-height:65vh; line-height:1.8; text-align:center;">
-                <h2 style="color:#00c6ff; margin-top:0;">Detector CMS</h2>
-                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:16px;">
-                    Vista frontal del detector CMS. Cada colisión produce pares de muones (trazas rojas) y otras partículas (trazas azules) que se alejan del punto de colisión central.
-                </p>
-                <canvas id="canvasCMS" width="500" height="500"
-                style="border-radius:50%; border:2px solid rgba(0,198,255,0.4);
-                box-shadow:0 0 30px rgba(0,198,255,0.3); cursor:pointer;"
-                title="Clic para disparar una colisión manual">
-            </canvas>
-            <p style="color:rgba(255,255,255,0.4); font-size:12px; margin-top:10px;">
-                Haz clic en el detector para disparar una colisión 
-            </p>
-        </div>  
+
+        </div>
     </div>
 </div>
+
+<button id="btnSimulacion" onclick="window.abrirSimulacionModal()" title="Simulación del detector CMS">⚛</button>
+ 
+<div id="modalSimulacion" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,10,30,1); z-index:200; justify-content:center; align-items:center;">
+     <div style="display:flex; flex-direction:column; width:100%; height:100%;">
+ 
+        <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+            <button onclick="cerrarSimulacionModal()"
+                style="background:red; color:white; border:none; border-radius:6px;
+                       padding:5px 12px; cursor:pointer; font-size:12px; font-weight:bold;">
+                ✕ Cerrar
+            </button>
+        </div>
+ 
+        <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
+                    border-radius:14px; overflow:hidden;
+                    border:1px solid rgba(0,198,255,0.3);">
+ 
+            <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
+                <button id="tabSimSimulacion" onclick="cambiarTabSim('simulacion')"
+                    style="flex:1; padding:14px; background:rgba(0,198,255,0.2); color:#00c6ff;
+                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                           border-bottom:3px solid #00c6ff;">
+                    Simulación 3D
+                </button>
+                <button id="tabSimFisica" onclick="cambiarTabSim('fisica')"
+                    style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
+                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                           border-bottom:3px solid transparent;">
+                    Conceptos físicos
+                </button>
+                <button id="tabSimGuia" onclick="cambiarTabSim('guiasim')"
+                    style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
+                           border:none; font-size:15px; font-weight:bold; cursor:pointer;
+                           border-bottom:3px solid transparent;">
+                    Guía de uso
+                </button>
+            </div>
+ 
+            <!-- Contenido pestaña Simulación 3D -->
+             <div id="contenidoSimSimulacion" style="display:flex; flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
+                <h2 style="color:#00c6ff; margin-top:0;">Simulación 3D del Detector CMS</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:10px;">
+                    Arrastra para orbitar · Rueda para zoom · Clic en el detector para disparar una colisión
+                </p>
+ 
+                <div id="cms3-root">
+                  <div id="cms3-bar">
+                    <button class="c3-btn" data-v="front" onclick="cms3SetView('front')">Frontal</button>
+                    <button class="c3-btn" data-v="side" onclick="cms3SetView('side')">Lateral</button>
+                    <button class="c3-btn" data-v="top" onclick="cms3SetView('top')">Superior</button>
+                    <button class="c3-btn active" data-v="iso" onclick="cms3SetView('iso')">Isométrica</button>
+                    <button class="c3-btn" id="cms3-auto" onclick="cms3ToggleAuto()">Auto-rotar</button>
+                    <button class="c3-btn" id="cms3-wire" onclick="cms3ToggleWire()">Solo estructura</button>
+                    <span style="margin-left:auto;font-size:9px;color:#194161;letter-spacing:.1em">CMS · LHC · CERN · WebGL</span>
+                  </div>
+                  <div id="cms3-canvas-wrap">
+                    <div id="cms3-loading">Cargando WebGL…</div>
+                  </div>
+                  <div id="cms3-leg">
+                    <div class="c3-leg"><div class="c3-sw" style="background:#ff3b3b"></div>Muones</div>
+                    <div class="c3-leg"><div class="c3-sw" style="background:#3fb6ff"></div>Trazas (tracker)</div>
+                    <div class="c3-leg"><div class="c3-sw" style="background:#33ff8c"></div>Electrones / fotones</div>
+                    <div class="c3-leg"><div class="c3-sw" style="background:#ffcc22"></div>Jets hadrónicos</div>
+                    <div class="c3-leg"><div class="c3-sw" style="background:#ff8a1e"></div>Hadrones cargados</div>
+                  </div>
+                  <div id="cms3-stats">
+                    <div class="c3-st">Colisiones <b id="c3-col">0</b></div>
+                    <div class="c3-st">Muones <b id="c3-mu">0</b></div>
+                    <div class="c3-st">Jets <b id="c3-jet">0</b></div>
+                    <div class="c3-st">Trazas <b id="c3-trk">0</b></div>
+                    <div class="c3-st" style="margin-left:auto;color:#194161">arrastra para orbitar · scroll zoom · clic colisión</div>
+                  </div>
+                </div>
+            </div>
+ 
+            <!-- Contenido pestaña Conceptos físicos (idéntico al que ya tenías) -->
+            <div id="contenidoSimFisica" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
+                <h2 style="color:#00c6ff; margin-top:0;">Conceptos físicos</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
+                    Entender estos conceptos te ayudará a interpretar mejor los resultados.
+                </p>
+ 
+                <h3 style="color:#00c6ff;">¿Qué es el CMS y el LHC?</h3>
+                <p>El <strong>LHC</strong> (Large Hadron Collider) es el acelerador de partículas más grande del mundo, ubicado en el CERN (Ginebra, Suiza). Acelera protones a velocidades cercanas a la de la luz y los hace colisionar. El <strong>CMS</strong> (Compact Muon Solenoid) es uno de los detectores que registra los productos de esas colisiones, incluyendo los muones.</p>
+ 
+                <h3 style="color:#00c6ff;">¿Qué es un muón?</h3>
+                <p>El muón es una partícula elemental de la misma familia que el electrón, pero con una masa ~207 veces mayor. Es estable el tiempo suficiente para atravesar el detector completo, lo que lo hace muy útil para el análisis. Cada evento contiene uno o más muones con propiedades medidas:</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:8px;"><strong>pt — Momento transverso</strong> (GeV/c): Es la componente del momento perpendicular al haz. Muones con alto pt provienen típicamente de decaimientos de partículas pesadas.</li>
+                    <li style="margin-bottom:8px;"><strong>η — Pseudorapidez</strong>: Describe el ángulo de emisión respecto al haz. Valores cercanos a 0 son perpendiculares al haz; valores altos (|η| > 2) son más paralelos. El CMS detecta muones hasta |η| ≈ 2.4.</li>
+                    <li style="margin-bottom:8px;"><strong>φ — Ángulo azimutal</strong> (radianes): Es el ángulo alrededor del eje del haz. En colisiones sin sesgo, los muones se distribuyen uniformemente en φ.</li>
+                </ul>
+ 
+                <h3 style="color:#00c6ff;">Masa invariante</h3>
+                <p>Cuando dos muones provienen del decaimiento de una misma partícula, podemos reconstruir la masa de esa partícula original. Esta cantidad se llama <strong>masa invariante M</strong> y se calcula como:</p>
+                <p style="background:rgba(0,198,255,0.1); padding:12px 16px; border-radius:8px; font-family:monospace; font-size:15px;">
+                    M² = 2 · pt₁ · pt₂ · (cosh(η₁ − η₂) − cos(φ₁ − φ₂))
+                </p>
+                <p>Un <strong>pico en el histograma de M</strong> indica que muchos pares de muones tienen esa masa, revelando la existencia de una partícula conocida:</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:6px;"><strong>J/ψ (~3.1 GeV)</strong>: mesón compuesto por un quark charm y su antiquark.</li>
+                    <li style="margin-bottom:6px;"><strong>Υ (Upsilon, ~9.5 GeV)</strong>: mesón compuesto por un quark bottom y su antiquark.</li>
+                    <li style="margin-bottom:6px;"><strong>Z (~91 GeV)</strong>: bosón mediador de la fuerza débil, una de las partículas más importantes del Modelo Estándar.</li>
+                </ul>
+ 
+                <h3 style="color:#00c6ff;">Cortes de selección</h3>
+                <p>Los <strong>cortes</strong> son criterios de filtrado para mejorar la calidad de los datos o aislar una señal eliminando el "ruido de fondo":</p>
+                <ul style="padding-left:20px;">
+                    <li style="margin-bottom:8px;"><strong>pt &gt; valor</strong>: Elimina muones de baja energía que suelen provenir de procesos de fondo.</li>
+                    <li style="margin-bottom:8px;"><strong>|η| &lt; 2.4</strong>: Restringe los eventos a la región geométrica donde el CMS mide con buena precisión.</li>
+                    <li style="margin-bottom:8px;"><strong>φ uniforme</strong>: Si la distribución en φ no es uniforme tras los cortes, puede indicar ineficiencias del detector.</li>
+                </ul>
+                <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:16px;">
+                     <em>Tip: Aplica primero cortes en pt y η, y luego observa cómo cambia el histograma de masa invariante. ¡Así es exactamente como trabajan los científicos del CERN!</em>
+                </p>
+            </div>
+ 
+            <!-- Contenido pestaña Guía de uso de la simulación -->
+            <div id="contenidoSimGuiasim" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
+                <h2 style="color:#00c6ff; margin-top:0;">Guía de uso de la simulación</h2>
+                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
+                    Esta simulación reconstruye en 3D la geometría del detector CMS y muestra colisiones de partículas generadas de forma simplificada.
+                </p>
+                <ol style="padding-left:20px;">
+                    <li style="margin-bottom:14px;">
+                        <strong>Vistas rápidas</strong><br>
+                        Usa los botones <em>Frontal</em>, <em>Lateral</em>, <em>Superior</em> e <em>Isométrica</em> para saltar directamente a un ángulo de cámara predefinido, igual que en los displays oficiales del CERN.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Orbitar libremente</strong><br>
+                        Arrastra con el clic izquierdo (o desliza con el dedo en móvil) para rotar la cámara alrededor del detector desde cualquier ángulo.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Zoom</strong><br>
+                        Usa la rueda del mouse (o pellizca en pantallas táctiles) para acercar o alejar la vista.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Disparar una colisión</strong><br>
+                        Haz clic sobre el detector para generar una nueva colisión manual en cualquier momento. El simulador también dispara colisiones automáticas de forma periódica.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Solo estructura</strong><br>
+                        Oculta los volúmenes sólidos de las capas y deja visible solo el armazón (wireframe), útil para ver las trazas de las partículas sin obstrucciones.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Auto-rotar</strong><br>
+                        Activa una rotación automática y continua de la cámara, ideal para presentaciones o para apreciar el detector desde todos los ángulos sin interactuar manualmente.
+                    </li>
+                    <li style="margin-bottom:14px;">
+                        <strong>Leyenda de colores</strong><br>
+                        Cada color de traza representa un tipo de partícula: rojo para muones (atraviesan todo el detector), azul para trazas del tracker, verde para electrones/fotones detenidos en el ECAL, amarillo/naranja para jets hadrónicos y hadrones cargados detenidos en el HCAL.
+                    </li>
+                </ol>
+            </div>
+ 
+        </div>
+    </div>
 </div>
 
 </body>
