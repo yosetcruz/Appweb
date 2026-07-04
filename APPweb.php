@@ -42,9 +42,6 @@ body {
     100% { opacity: 0; }
 }
 
-/* ===================== */
-/* DEGRADADO ENCIMA */
-/* ===================== */
 .overlay {
     position: fixed;
     width: 100%;
@@ -57,9 +54,6 @@ body {
     );
 }
 
-/* ===================== */
-/* UI PRINCIPAL */
-/* ===================== */
 #layout{
     flex: 1;
     height: 100vh;
@@ -111,7 +105,6 @@ body {
     opacity: 0.5;
 }
 
-/* SIDEBAR */
 .sidebar {
     position: fixed;
     top: 0;
@@ -149,7 +142,6 @@ body {
     background: #005599;
 }
 
-/* MODAL */
 .modal {
     position: fixed;
     top: 0;
@@ -183,7 +175,6 @@ body {
    overflow-y: auto;
 }
 
-
 .modal-header p {
     margin: 0;
     position: relative;
@@ -215,7 +206,6 @@ body {
     z-index: 100;
 }
 
-/* Panel de cortes */
 .panel-cortes {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
@@ -288,7 +278,6 @@ body.sidebar-abierto #layout {
     margin-left: 300px;
 }
 
-/* Selector de variable para graficar */
 .selector-grafica {
     background: rgba(0, 0, 0, 0.7);
     padding: 15px;
@@ -308,7 +297,6 @@ body.sidebar-abierto #layout {
     font-size: 14px;
 }
 
-/* ── Nuevos estilos: control de bins y escala ── */
 .control-row {
     display: flex;
     align-items: center;
@@ -506,7 +494,7 @@ body.sidebar-abierto #layout {
 }
 #contenidoSimSimulacion {
     flex: 1;
-    display: flex !important;
+    display: flex;
     flex-direction: column;
     padding: 10px !important;
     overflow: hidden !important;
@@ -604,14 +592,11 @@ body.sidebar-abierto #layout {
     background:#020509
 }
 
-
-
 </style>
 </head>
 
 <body>
 
-<!-- SLIDER -->
 <div class="fondo">
     <img src="fondo/fondo1.jpeg">
     <img src="fondo/fondo2.jpeg">
@@ -619,13 +604,10 @@ body.sidebar-abierto #layout {
     <img src="fondo/fondo4.jpeg">
 </div>
 
-<!-- DEGRADADO -->
 <div class="overlay"></div>
 
-<!-- CONTENIDO PRINCIPAL -->
 <div id="layout"> 
     <h1 id="titulo">Análisis del CMS</h1>
-    
     <button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
         Comenzar
     </button>
@@ -640,25 +622,18 @@ body.sidebar-abierto #layout {
     <div class="grupo-body" id="g2muones">
         <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Muestra 1</div>
         <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Muestra 2</div>
-        
     </div>
-
 
     <div class="grupo-header bloqueado" onclick="toggleGrupo('g4muones')">
         4 Muones <span id="flecha-g4muones">▶</span> 
     </div>
     <div class="grupo-body" id="g4muones">
-
     </div>    
-    
-
 </div>
 
 <div id="modal" class="modal">
     <div class="modal-content">
-
         <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
-
         <div class="modal-body" style="width:100%; box-sizing:border-box;">
             <div class="modal-header">
                 <p id="modalTexto"></p>
@@ -703,7 +678,7 @@ body.sidebar-abierto #layout {
                            oninput="document.getElementById('binsValDisplay').textContent = this.value">
                     <span id="binsValDisplay" style="font-size:13px; font-weight:bold; min-width:28px;">50</span>
                 </div>
-                <div style="display:flex; align-items:center; gap:6px;">   <!-- ✅ escala DENTRO de contenedorBins -->
+                <div style="display:flex; align-items:center; gap:6px;">
                     <label style="font-size:13px;">Escala:</label>
                     <button class="escala-btn activo" id="btnLin" onclick="setEscala('lin')">Lineal</button>
                     <button class="escala-btn" id="btnLog" onclick="setEscala('log')">Logarítmica</button>
@@ -711,7 +686,6 @@ body.sidebar-abierto #layout {
             </div>
             
             <div id="grafica" style="display:none"></div>
-                
             </div>
 
                 <div class="lista-cortes" id="listaCortes-container" style="display:none">
@@ -723,7 +697,6 @@ body.sidebar-abierto #layout {
                     <div id="infoEventos" style="margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
                 </div>
             </div>
-
             </div>
         </div>
     </div>
@@ -738,16 +711,16 @@ const sidebar = document.getElementById("sidebar");
 const btnMuestras = document.getElementById("btnMuestras");
 const titulo = document.getElementById("titulo");
 const modal = document.getElementById("modal");
-modal.addEventListener("transitioned", ()=>{
+modal.addEventListener("transitionend", ()=>{
     if(!modal.classList.contains("activo")){modal.style.pointerEvents = "none";}
 });
 const modalTexto = document.getElementById("modalTexto");
 
 let bloqueado = false;
 let habilitado = false;
-let datosOriginales = [];      // Datos originales sin cortes
-let datosActuales = [];        // Datos después de aplicar cortes acumulativos
-let listaCortes = [];          // Lista de cortes aplicados
+let datosOriginales = [];
+let datosActuales = [];
+let listaCortes = [];
 let columnasDisponibles = [];
 let escalaLog = false;
 
@@ -762,9 +735,7 @@ function habilitarMuestras() {
     document.getElementById("btnSimulacion").disabled = true;
 }
 
-
 function procesarDatos(data) {
-    // PASO 1: Calcular masa invariante primero
     const tieneNomenclaturaA = data[0].hasOwnProperty('mu1_pt') && data[0].hasOwnProperty('mu2_pt');
     const tieneNomenclaturaB = data[0].hasOwnProperty('pt1') && data[0].hasOwnProperty('pt2');
 
@@ -784,7 +755,6 @@ function procesarDatos(data) {
         });
     }
 
-    // PASO 2: Detectar columnas (ahora M ya existe en los datos)
     if (data.length > 0) {
         columnasDisponibles = Object.keys(data[0]).filter(col => {
             return typeof data[0][col] === 'number' &&
@@ -793,7 +763,6 @@ function procesarDatos(data) {
 
         console.log("Columnas detectadas:", columnasDisponibles);
 
-        // PASO 3: Llenar selectores (M ya está en columnasDisponibles)
         const selectCorte = document.getElementById("variable");
         const selectGrafica = document.getElementById("variableGrafica");
 
@@ -870,7 +839,6 @@ function aplicarCorteAcumulativo() {
         return;
     }
     
-    // Crear función de filtro según el operador
     let filtroFunc;
     switch(operador) {
         case '>':
@@ -892,7 +860,6 @@ function aplicarCorteAcumulativo() {
             filtroFunc = row => row[variable] > valor;
     }
     
-    // Aplicar filtro a los datos actuales
     let nuevosDatos = datosActuales.filter(row => filtroFunc(row));
     
     if (nuevosDatos.length === 0) {
@@ -900,7 +867,6 @@ function aplicarCorteAcumulativo() {
         return;
     }
     
-    // Guardar el corte
     listaCortes.push({
         variable: variable,
         operador: operador,
@@ -910,10 +876,8 @@ function aplicarCorteAcumulativo() {
         eventosDespues: nuevosDatos.length
     });
     
-    // Actualizar datos
     datosActuales = nuevosDatos;
     
-    // Actualizar UI
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
@@ -933,7 +897,6 @@ function reiniciarCortes() {
 function eliminarCorte(indice) {
     if (indice < 0 || indice >= listaCortes.length) return;
     
-    // Reaplicar todos los cortes excepto el seleccionado
     let datosTemp = [...datosOriginales];
     
     for (let i = 0; i < listaCortes.length; i++) {
@@ -963,7 +926,6 @@ function eliminarCorte(indice) {
         datosTemp = datosTemp.filter(row => filtroFunc(row));
     }
     
-    // Eliminar el corte de la lista
     listaCortes.splice(indice, 1);
     datosActuales = datosTemp;
     
@@ -1011,10 +973,8 @@ function dibujarHistogramaCompleto() {
         return;
     }
     
-    // Obtener la variable seleccionada para graficar
     let variableMostrar = document.getElementById("variableGrafica").value;
     
-    // Obtener datos para el histograma (rango completo)
     let datosAntes = datosOriginales.map(r => r[variableMostrar]).filter(x => typeof x === "number" && !isNaN(x));
     let datosDespues = datosActuales.map(r => r[variableMostrar]).filter(x => typeof x === "number" && !isNaN(x));
     
@@ -1023,20 +983,16 @@ function dibujarHistogramaCompleto() {
         return;
     }
     
-    // Calcular rango COMPLETO de los datos (sin zoom)
     let minValor = Math.min(...datosAntes);
     let maxValor = Math.max(...datosAntes);
     
-    // Añadir un pequeño margen del 5% para mejor visualización
     let rango = maxValor - minValor;
     let rangoMin = minValor - rango * 0.05;
     let rangoMax = maxValor + rango * 0.05;
     
-    // Número de bins (usando regla de Freedman-Diaconis para mejor resolución)
     let numBins = parseInt(document.getElementById("numBins").value);
     let binWidth = (maxValor - minValor) / numBins;
     
-   
     let binCenters = [];
     let histAntes = new Array(numBins).fill(0);
     let histDespues = new Array(numBins).fill(0);
@@ -1055,15 +1011,12 @@ function dibujarHistogramaCompleto() {
         if (binIndex >= 0 && binIndex < numBins) histDespues[binIndex]++;
     });
     
-    // Normalizar los histogramas para comparación justa (opcional)
     let maxAntes = Math.max(...histAntes);
     let maxDespues = Math.max(...histDespues);
     let yMax = Math.max(maxAntes, maxDespues) * 1.1;
     
-    // Determinar si es una variable angular (phi) o no
     let isAngular = variableMostrar.includes('phi');
     
-    // Crear gráfica con rango COMPLETO
     let layout = {
         title: {
             text: `Distribución COMPLETA de ${variableMostrar} - Antes vs Después de cortes acumulativos`,
@@ -1075,7 +1028,7 @@ function dibujarHistogramaCompleto() {
             zerolinecolor: 'rgba(255, 255, 255, 0.3)',
             titlefont: { color: 'white' },
             tickfont: { color: 'white' },
-            range: [rangoMin, rangoMax]  // Rango COMPLETO sin zoom
+            range: [rangoMin, rangoMax]
         },
         yaxis: { 
             title: "Número de eventos",
@@ -1098,7 +1051,6 @@ function dibujarHistogramaCompleto() {
         bargap: 0.1
     };
     
-    // Para variables eta, añadir líneas en |eta| = 2.4 (typical acceptance)
     let shapes = [];
     if (variableMostrar.includes('eta')) {
         shapes.push({
@@ -1214,7 +1166,6 @@ function cerrarModal() {
     document.querySelectorAll(".grupo-header").forEach(e => e.classList.remove("bloqueado"));
     document.getElementById("btnAyuda").disabled = false;
     document.getElementById("btnSimulacion").disabled = false;
-    // habilitado sigue siendo true → sidebar permanece activo
 }
 
 document.addEventListener("contextmenu", e => {
@@ -1301,15 +1252,7 @@ function cambiarTab(tab) {
         btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
     });
 }
- 
-function abrirAyuda() {
-    document.getElementById("modalAyuda").style.display = "flex";
-}
- 
-function cerrarAyuda() {
-    document.getElementById("modalAyuda").style.display = "none";
-}
-// ── Simulación CMS ──
+
 let animCMS = null;
 let particulasCMS = [];
 
@@ -1345,7 +1288,6 @@ function iniciarSimulacion() {
     function dibujarDetector(ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Fondo
         const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
         bg.addColorStop(0, '#000d1a');
         bg.addColorStop(1, '#000508');
@@ -1354,7 +1296,6 @@ function iniciarSimulacion() {
         ctx.fillStyle = bg;
         ctx.fill();
 
-        // Capas del detector
         const capas = [
             { r: R * 0.18, color: 'rgba(0,198,255,0.15)', label: 'Tracker' },
             { r: R * 0.38, color: 'rgba(0,198,255,0.10)', label: 'ECAL' },
@@ -1372,13 +1313,11 @@ function iniciarSimulacion() {
             ctx.fillStyle = c.color;
             ctx.fill();
 
-            // Etiqueta
             ctx.fillStyle = 'rgba(0,198,255,0.35)';
             ctx.font = '10px Arial';
             ctx.fillText(c.label, cx + c.r * 0.72, cy - 4);
         });
 
-        // Líneas radiales de referencia
         for (let i = 0; i < 24; i++) {
             const ang = (i / 24) * Math.PI * 2;
             ctx.beginPath();
@@ -1389,7 +1328,6 @@ function iniciarSimulacion() {
             ctx.stroke();
         }
 
-        // Punto central (IP)
         ctx.beginPath();
         ctx.arc(cx, cy, 4, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255,255,255,0.9)';
@@ -1415,7 +1353,6 @@ function iniciarSimulacion() {
         });
     }
 
-    // Colisión automática periódica
     let timer = 0;
     function loop() {
         dibujarDetector(ctx);
@@ -1439,34 +1376,34 @@ function detenerSimulacion() {
     particulasCMS = [];
 }
 
-// ── Simulación 3D CMS ──────────────────────────────────────────
 (function(){
- 
+
 var cms3Booted = false;
-var cms3RAF = null;
- 
+var cms3RAF = null; 
+var cms3HandleResize = null;
+
 function cms3Boot(){
   if (typeof THREE === 'undefined') { setTimeout(cms3Boot, 60); return; }
- 
+
   var wrap = document.getElementById('cms3-canvas-wrap');
   if (!wrap) return;
   var loadingEl = document.getElementById('cms3-loading');
-  var W = wrap.clientWidth || 680, H = Math.round(W*10/16);
- 
+  var W = wrap.clientWidth || 680;
+  var H = wrap.clientHeight || Math.round(W*10/16);
+
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020509);
   scene.fog = new THREE.FogExp2(0x020509, 0.0009);
- 
+
   var camera = new THREE.PerspectiveCamera(42, W/H, 1, 5000);
- 
+
   var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
   renderer.setSize(W, H);
   renderer.outputEncoding = THREE.sRGBEncoding;
   wrap.appendChild(renderer.domElement);
   if (loadingEl) loadingEl.style.display = 'none';
- 
-  /* ── Iluminación ── */
+
   scene.add(new THREE.AmbientLight(0x40556a, 0.55));
   var key = new THREE.DirectionalLight(0xbfe0ff, 0.9);
   key.position.set(300, 400, 200);
@@ -1476,19 +1413,18 @@ function cms3Boot(){
   scene.add(rim);
   var ipLight = new THREE.PointLight(0xffffff, 0, 600);
   scene.add(ipLight);
- 
-  /* ── Escala geométrica del CMS ── */
+
   var SCALE = 90;
   var R = { pipe:.055, tracker:.28, ecal:.44, hcal:.60, sol:.68, m1:.78, m2:.88, m3:.975 };
   var ZF = { pipe:.97, tracker:.90, ecal:.82, hcal:.74, sol:.66, m1:.59, m2:.52, m3:.44 };
   var HZ = 1.35;
- 
+
   var group = new THREE.Group();
   scene.add(group);
- 
+
   var wireMode = false;
   var meshes = [];
- 
+
   function addCylinderLayer(rIn, rOut, halfLen, color, opacity, isMuon, radialSegs){
     radialSegs = radialSegs || 56;
     var geo = new THREE.CylinderGeometry(rOut*SCALE, rOut*SCALE, halfLen*2*SCALE, radialSegs, 1, true);
@@ -1506,17 +1442,16 @@ function cms3Boot(){
     var mesh = new THREE.Mesh(geo, mat);
     group.add(mesh);
     meshes.push(mesh);
- 
+
     var edges = new THREE.EdgesGeometry(geo, 1);
     var lineMat = new THREE.LineBasicMaterial({ color: color, transparent:true, opacity: Math.min(1, opacity*2.2) });
     var lines = new THREE.LineSegments(edges, lineMat);
     group.add(lines);
     meshes.push(lines);
- 
+
     return mesh;
   }
- 
-  /* Capas en orden de fuera hacia dentro */
+
   addCylinderLayer(0, R.m3,      HZ*ZF.m3,      0xff3333, 0.07, true, 48);
   addCylinderLayer(0, R.m2,      HZ*ZF.m2,      0xff5555, 0.08, true, 48);
   addCylinderLayer(0, R.m1,      HZ*ZF.m1,      0xff7777, 0.09, true, 48);
@@ -1525,8 +1460,7 @@ function cms3Boot(){
   addCylinderLayer(0, R.ecal,    HZ*ZF.ecal,    0x36d27a, 0.16, false, 48);
   addCylinderLayer(0, R.tracker, HZ*ZF.tracker, 0x3fa0e8, 0.13, false, 40);
   addCylinderLayer(0, R.pipe,    HZ*ZF.pipe,    0xcfcfcf, 0.45, false, 24);
- 
-  /* Franjas tipo "hierro de retorno" sobre la capa muon exterior */
+
   (function(){
     var ringGroup = new THREE.Group();
     var segs = 18;
@@ -1552,13 +1486,12 @@ function cms3Boot(){
     }
     group.add(ringGroup);
   })();
- 
-  /* Punto de interacción (IP) con halo */
+
   var ipGeo = new THREE.SphereGeometry(2.4, 16, 16);
   var ipMat = new THREE.MeshBasicMaterial({ color:0xffffff });
   var ipMesh = new THREE.Mesh(ipGeo, ipMat);
   group.add(ipMesh);
- 
+
   function makeGlowTexture(){
     var c = document.createElement('canvas'); c.width=c.height=128;
     var ctx = c.getContext('2d');
@@ -1569,15 +1502,14 @@ function cms3Boot(){
     ctx.fillStyle = g; ctx.fillRect(0,0,128,128);
     return new THREE.CanvasTexture(c);
   }
- 
+
   var haloMat = new THREE.SpriteMaterial({
     map: makeGlowTexture(), color: 0x9fd9ff, transparent:true, opacity:0.0, depthWrite:false, blending:THREE.AdditiveBlending
   });
   var halo = new THREE.Sprite(haloMat);
   halo.scale.set(40,40,1);
   group.add(halo);
- 
-  /* Grilla de referencia sutil */
+
   var gridGeo = new THREE.BufferGeometry();
   var gridPts = [];
   for (var gi=-6; gi<=6; gi++){
@@ -1588,24 +1520,22 @@ function cms3Boot(){
   var gridMat = new THREE.LineBasicMaterial({ color:0x0e3050, transparent:true, opacity:0.35 });
   var grid = new THREE.LineSegments(gridGeo, gridMat);
   scene.add(grid);
- 
-  /* Ejes */
+
   var axesHelper = new THREE.AxesHelper(70);
   axesHelper.material.transparent = true;
   axesHelper.material.opacity = 0.45;
   scene.add(axesHelper);
- 
-  /* ── Cámara orbital ── */
+
   var camTheta = 0.7, camPhi = 0.42, camDist = 330;
   var autoOn = false, dragging = false, lastX=0, lastY=0;
- 
+
   var PRESETS = {
     front:{ theta:0, phi:0.001, dist:300 },
     side: { theta:Math.PI/2, phi:0.001, dist:300 },
     top:  { theta:0.001, phi:Math.PI/2-0.05, dist:330 },
     iso:  { theta:0.7, phi:0.42, dist:330 }
   };
- 
+
   function applyCamera(){
     var x = camDist*Math.sin(camTheta)*Math.cos(camPhi);
     var y = camDist*Math.sin(camPhi);
@@ -1614,7 +1544,7 @@ function cms3Boot(){
     camera.lookAt(0,0,0);
   }
   applyCamera();
- 
+
   window.cms3SetView = function(k){
     var p = PRESETS[k];
     camTheta = p.theta; camPhi = p.phi; camDist = p.dist;
@@ -1622,12 +1552,12 @@ function cms3Boot(){
     var btn = document.querySelector('.c3-btn[data-v="'+k+'"]');
     if (btn) btn.classList.add('active');
   };
- 
+
   window.cms3ToggleAuto = function(){
     autoOn = !autoOn;
     document.getElementById('cms3-auto').classList.toggle('active', autoOn);
   };
- 
+
   window.cms3ToggleWire = function(){
     wireMode = !wireMode;
     document.getElementById('cms3-wire').classList.toggle('active', wireMode);
@@ -1637,10 +1567,10 @@ function cms3Boot(){
       }
     });
   };
- 
+
   var canvas = renderer.domElement;
   canvas.style.cursor = 'grab';
- 
+
   canvas.addEventListener('mousedown', function(e){
     dragging = true; lastX = e.clientX; lastY = e.clientY;
     canvas.style.cursor = 'grabbing';
@@ -1658,7 +1588,7 @@ function cms3Boot(){
     e.preventDefault();
     camDist = Math.max(80, Math.min(900, camDist + e.deltaY*0.4));
   }, { passive:false });
- 
+
   var touch0 = null;
   canvas.addEventListener('touchstart', function(e){ e.preventDefault(); touch0 = e.touches[0]; }, {passive:false});
   canvas.addEventListener('touchmove', function(e){
@@ -1669,19 +1599,18 @@ function cms3Boot(){
     camPhi = Math.max(-1.45, Math.min(1.45, camPhi - (t.clientY-touch0.clientY)*0.008));
     touch0 = t;
   }, {passive:false});
- 
+
   canvas.addEventListener('click', function(){ if(!dragging) spawnCollision(); });
- 
-  /* ── Partículas / trazas reales en 3D ── */
+
   var activeTracks = [];
   var cols=0, mus=0, jts=0, trks=0;
- 
+
   function rndDir(){
     var th = Math.random()*Math.PI*2;
     var ph = (Math.random()-0.5)*Math.PI*0.85;
     return new THREE.Vector3(Math.cos(ph)*Math.cos(th), Math.sin(ph), Math.cos(ph)*Math.sin(th));
   }
- 
+
   function buildHelixPoints(dir, curv, maxLen, steps){
     var pts = [];
     var pos = new THREE.Vector3(0,0,0);
@@ -1697,7 +1626,7 @@ function cms3Boot(){
     }
     return pts;
   }
- 
+
   function buildStraightPoints(dir, maxRxy, maxZ, steps){
     var pts = [];
     var pos = new THREE.Vector3(0,0,0);
@@ -1710,7 +1639,7 @@ function cms3Boot(){
     }
     return pts;
   }
- 
+
   function makeTrackMesh(pts, color, lw){
     if (pts.length < 2) return null;
     var curve = new THREE.CatmullRomCurve3(pts);
@@ -1720,7 +1649,7 @@ function cms3Boot(){
     group.add(mesh);
     return { mesh: mesh, life:1, decay: 0.012 + Math.random()*0.01 };
   }
- 
+
   function makeJetBar(dir, energy){
     var rIn = R.ecal*SCALE, rOut = rIn + energy*R.hcal*SCALE*0.7;
     var p0 = dir.clone().multiplyScalar(rIn);
@@ -1735,15 +1664,15 @@ function cms3Boot(){
     group.add(mesh);
     return { mesh: mesh, life:1, decay: 0.006 };
   }
- 
+
   function spawnCollision(){
     cols++;
     var elCol = document.getElementById('c3-col'); if (elCol) elCol.textContent = cols;
- 
+
     ipLight.intensity = 6;
     haloMat.opacity = 0.95;
     halo.scale.set(50,50,1);
- 
+
     var nT = 10 + Math.floor(Math.random()*12);
     trks += nT; var elTrk = document.getElementById('c3-trk'); if (elTrk) elTrk.textContent = trks;
     for (var i=0;i<nT;i++){
@@ -1753,7 +1682,7 @@ function cms3Boot(){
       var t = makeTrackMesh(pts, 0x3fb6ff, 0.45);
       if (t) activeTracks.push(t);
     }
- 
+
     var nMu = Math.random()<0.4 ? 2 : 0;
     mus += nMu; var elMu = document.getElementById('c3-mu'); if (elMu) elMu.textContent = mus;
     for (i=0;i<nMu;i++){
@@ -1762,7 +1691,7 @@ function cms3Boot(){
       t = makeTrackMesh(pts, 0xff3333, 0.7);
       if (t){ t.decay = 0.007; activeTracks.push(t); }
     }
- 
+
     var nEM = 3 + Math.floor(Math.random()*5);
     for (i=0;i<nEM;i++){
       d = rndDir();
@@ -1770,7 +1699,7 @@ function cms3Boot(){
       t = makeTrackMesh(pts, 0x33ff8c, 0.5);
       if (t){ t.decay = 0.018; activeTracks.push(t); }
     }
- 
+
     var nJet = 2 + Math.floor(Math.random()*4);
     jts += nJet; var elJet = document.getElementById('c3-jet'); if (elJet) elJet.textContent = jts;
     for (var j=0;j<nJet;j++){
@@ -1789,7 +1718,7 @@ function cms3Boot(){
       }
       activeTracks.push(makeJetBar(d, E));
     }
- 
+
     var nH2 = 3 + Math.floor(Math.random()*5);
     for (i=0;i<nH2;i++){
       d = rndDir();
@@ -1799,19 +1728,18 @@ function cms3Boot(){
     }
   }
   window.cms3SpawnCollision = spawnCollision;
- 
-  /* ── Loop ── */
+
   var tick = 0;
   function animate(){
     cms3RAF = requestAnimationFrame(animate);
- 
+
     if (autoOn) camTheta += 0.0035;
     applyCamera();
- 
+
     ipLight.intensity *= 0.90;
     haloMat.opacity *= 0.90;
     halo.scale.multiplyScalar(0.96);
- 
+
     for (var i=activeTracks.length-1;i>=0;i--){
       var tr = activeTracks[i];
       tr.life -= tr.decay;
@@ -1824,13 +1752,13 @@ function cms3Boot(){
         tr.mesh.material.opacity = Math.max(0, tr.life);
       }
     }
- 
+
     tick++;
     if (tick % 95 === 0) spawnCollision();
- 
+
     renderer.render(scene, camera);
   }
- 
+
   function handleResize(){
     var w = wrap.clientWidth;
     var h = wrap.clientHeight;
@@ -1840,15 +1768,13 @@ function cms3Boot(){
     renderer.setSize(w,h);
   }
   window.addEventListener('resize', handleResize);
- 
+  cms3HandleResize = handleResize;
+
   spawnCollision();
   animate();
 }
 
 
-/* ── Integración con el sistema de pestañas existente ──────────────
-   Se conecta a la función cambiarTab() que ya tienes definida más
-   arriba en tu archivo, sin necesidad de tocarla. */
 var originalCambiarTab = window.cambiarTab;
 window.abrirSimulacionModal = function(){
     document.getElementById('modalSimulacion').style.display = 'flex';
@@ -1856,33 +1782,34 @@ window.abrirSimulacionModal = function(){
         cms3Booted = true;
         setTimeout(function() {
             cms3Boot();
-            // Redimensionar después de que el DOM se haya actualizado
-            setTimeout(handleResize, 100);
+            setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 100);
         }, 50);
     } else {
-        // Si ya está iniciado, solo redimensionar
-        setTimeout(handleResize, 100);
+        setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 100);
     }
 };
- 
 window.cerrarSimulacionModal = function(){
     document.getElementById('modalSimulacion').style.display = 'none';
 };
- 
+
 window.cambiarTabSim = function(tab){
     const tabs = ['simulacion', 'fisica', 'guiasim'];
     const idMap = { simulacion:'Simulacion', fisica:'Fisica', guiasim:'Guiasim' };
+    const displayMap = { simulacion:'flex', fisica:'block', guiasim:'block' };
     tabs.forEach(t => {
         const suf = idMap[t];
         const btn = document.getElementById('tabSim' + suf);
         const contenido = document.getElementById('contenidoSim' + suf);
         if (!btn || !contenido) return;
         const activo = t === tab;
-        contenido.style.display = activo ? 'block' : 'none';
+        contenido.style.display = activo ? displayMap[t] : 'none';
         btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
         btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
         btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
     });
+    if (tab === 'simulacion') {
+        setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 50);
+    }
 };
 
 })();
@@ -1893,7 +1820,6 @@ window.cambiarTabSim = function(tab){
      background:rgba(0,10,30,1); z-index:200; justify-content:center; align-items:center;">
      <div style="display:flex; flex-direction:column; width:700px; max-width:90%; max-height:90vh;">
 
-        <!-- Botón cerrar FUERA de la tarjeta -->
         <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
             <button onclick="cerrarAyuda()"
                 style="background:red; color:white; border:none; border-radius:6px;
@@ -1902,12 +1828,10 @@ window.cambiarTabSim = function(tab){
             </button>
         </div>
 
-        <!-- Tarjeta principal -->
          <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
             border-radius:14px; overflow:hidden;
-            border:1px solid rgba(0,198,255,0.3);
+            border:1px solid rgba(0,198,255,0.3);">
 
-            <!-- Pestañas -->
             <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
                 <button id="tabGuia" onclick="cambiarTab('guia')"
                     style="flex:1; padding:14px; background:rgba(0,198,255,0.2); color:#00c6ff;
@@ -1915,17 +1839,14 @@ window.cambiarTabSim = function(tab){
                            border-bottom:3px solid #00c6ff;">
                     Guía de uso
                 </button>
-                    
                 <button id="tabAnalisis" onclick="cambiarTab('analisis')"
                 style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
                 border:none; font-size:15px; font-weight:bold; cursor:pointer;
                 border-bottom:3px solid transparent;">
                     Acerca del análisis
                 </button>
-
             </div>
 
-            <!-- Contenido pestaña Guía -->
             <div id="contenidoGuia" style="padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">¿Cómo usar la aplicación?</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
@@ -1963,7 +1884,6 @@ window.cambiarTabSim = function(tab){
                 </ol>
             </div>
 
-                        <!-- Contenido pestaña Análisis -->
              <div id="contenidoAnalisis" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">Acerca del análisis</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
@@ -2028,7 +1948,7 @@ window.cambiarTabSim = function(tab){
             </button>
         </div>
  
-        <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
+        <div class="modal-sim-content" style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
                     border-radius:14px; overflow:hidden;
                     border:1px solid rgba(0,198,255,0.3);">
  
@@ -2045,7 +1965,7 @@ window.cambiarTabSim = function(tab){
                            border-bottom:3px solid transparent;">
                     Conceptos físicos
                 </button>
-                <button id="tabSimGuia" onclick="cambiarTabSim('guiasim')"
+                <button id="tabSimGuiasim" onclick="cambiarTabSim('guiasim')"
                     style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
                            border:none; font-size:15px; font-weight:bold; cursor:pointer;
                            border-bottom:3px solid transparent;">
@@ -2053,8 +1973,7 @@ window.cambiarTabSim = function(tab){
                 </button>
             </div>
  
-            <!-- Contenido pestaña Simulación 3D -->
-             <div id="contenidoSimSimulacion" style="display:flex; flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
+             <div id="contenidoSimSimulacion" style="flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
                 <h2 style="color:#00c6ff; margin-top:0;">Simulación 3D del Detector CMS</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:10px;">
                     Arrastra para orbitar · Rueda para zoom · Clic en el detector para disparar una colisión
@@ -2090,7 +2009,6 @@ window.cambiarTabSim = function(tab){
                 </div>
             </div>
  
-            <!-- Contenido pestaña Conceptos físicos (idéntico al que ya tenías) -->
             <div id="contenidoSimFisica" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">Conceptos físicos</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
@@ -2132,7 +2050,6 @@ window.cambiarTabSim = function(tab){
                 </p>
             </div>
  
-            <!-- Contenido pestaña Guía de uso de la simulación -->
             <div id="contenidoSimGuiasim" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">Guía de uso de la simulación</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
