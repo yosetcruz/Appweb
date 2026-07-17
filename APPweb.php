@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Análisis del CMS</title>
-
+ 
 <style>
 body {
     margin: 0;
@@ -12,14 +12,14 @@ body {
     display: flex;
     overflow: hidden;
 }
-
+ 
 .fondo {
     position: fixed;
     width: 100%;
     height: 100%;
     z-index: -2;
 }
-
+ 
 .fondo img {
     position: absolute;
     width: 100%;
@@ -28,12 +28,12 @@ body {
     opacity: 0;
     animation: fade 16s infinite;
 }
-
+ 
 .fondo img:nth-child(1) { animation-delay: 0s; }
 .fondo img:nth-child(2) { animation-delay: 4s; }
 .fondo img:nth-child(3) { animation-delay: 8s; }
 .fondo img:nth-child(4) { animation-delay: 12s; }
-
+ 
 @keyframes fade {
     0%   { opacity: 0; }
     8%   { opacity: 1; }
@@ -41,7 +41,7 @@ body {
     33%  { opacity: 0; }
     100% { opacity: 0; }
 }
-
+ 
 .overlay {
     position: fixed;
     width: 100%;
@@ -53,7 +53,7 @@ body {
         rgba(0,31,63,0.95)
     );
 }
-
+ 
 #layout{
     flex: 1;
     height: 100vh;
@@ -63,7 +63,7 @@ body {
     justify-content: center;
     transition: all 0.4s ease;
 }
-
+ 
 #titulo {
     font-size: 48px;
     color: white;
@@ -73,18 +73,18 @@ body {
     position: relative;
     transition: transform 0.6s ease;
 }
-
+ 
 #titulo.arriba {
     transform: translateY(-220px);
 }
-
+ 
 #modalTexto {
     font-size: 18px;
     font-weight: bold;
     padding: 8px 14px;
     margin-right: auto;
 }
-
+ 
 .boton {
     padding: 14px 22px;
     color: white;
@@ -96,15 +96,15 @@ body {
     background: linear-gradient(to right, #00c6ff, #0072ff);
     transition: 0.3s;
 }
-
+ 
 .boton:hover:not(:disabled) {
     transform: scale(1.05);
 }
-
+ 
 .boton:disabled {
     opacity: 0.5;
 }
-
+ 
 .sidebar {
     position: fixed;
     top: 0;
@@ -118,11 +118,11 @@ body {
     overflow-y: auto;
     z-index: 10;
 }
-
+ 
 .sidebar.abierto {
     left: 0;
 }
-
+ 
 .muestra {
     margin: 10px 0;
     padding: 10px;
@@ -131,17 +131,17 @@ body {
     opacity: 0.4;
     pointer-events: none;
 }
-
+ 
 .muestra.activa {
     opacity: 1;
     pointer-events: auto;
     cursor: pointer;
 }
-
+ 
 .muestra:hover {
     background: #005599;
 }
-
+ 
 .modal {
     position: fixed;
     top: 0;
@@ -154,12 +154,12 @@ body {
     transition: all 0.4s ease;
     z-index: 20;
 }
-
+ 
 .modal.activo {
     display: block;
     transform: translateY(0);
 }
-
+ 
 .modal-content {
    position: relative;
    width: 100%;
@@ -174,7 +174,7 @@ body {
                linear-gradient(to bottom, #001f3f, #000814);
    overflow-y: auto;
 }
-
+ 
 .modal-header p {
     margin: 0;
     position: relative;
@@ -192,7 +192,7 @@ body {
     margin-top: -20px;
     margin-top: 10px; 
 }
-
+ 
 .cerrar {
     position: fixed;
     top: 1px;
@@ -205,7 +205,7 @@ body {
     cursor: pointer;
     z-index: 100;
 }
-
+ 
 .panel-cortes {
     background: rgba(0, 0, 0, 0.7);
     padding: 20px;
@@ -214,13 +214,13 @@ body {
     box-sizing: border-box;
     flex: 1;
 }
-
+ 
 .panel-cortes select, .panel-cortes input {
     margin: 0;
     padding: 6px;
     font-size: 13px;
 }
-
+ 
 .lista-cortes {
     background: rgba(0, 0, 0, 0.5);
     padding: 20px;
@@ -231,7 +231,7 @@ body {
     text-align: left;
     border: 1px solid rgba(0, 198, 255, 0.2);
 }
-
+ 
 .corte-item {
     background: rgba(0, 114, 255, 0.3);
     margin: 5px;
@@ -241,7 +241,7 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
+ 
 .corte-item button {
     background: red;
     color: white;
@@ -250,13 +250,13 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
-
+ 
 .boton-pequeno {
     padding: 8px 15px;
     font-size: 14px;
     margin: 5px;
 }
-
+ 
 #grafica {
     width: 100%;
     height: 500px;
@@ -265,19 +265,19 @@ body {
     padding-right: 20px;
     box-sizing: border-box;
 }
-
+ 
 .boton-peligro {
     background: linear-gradient(to right, #ff416c, #ff4b2b);
 }
-
+ 
 .boton-exito {
     background: linear-gradient(to right, #00c6ff, #0072ff);
 }
-
+ 
 body.sidebar-abierto #layout {
     margin-left: 300px;
 }
-
+ 
 .selector-grafica {
     background: rgba(0, 0, 0, 0.7);
     padding: 15px;
@@ -290,13 +290,13 @@ body.sidebar-abierto #layout {
     flex-direction: column;
     justify-content: space-between;
 }
-
+ 
 .selector-grafica select {
     margin: 10px;
     padding: 8px;
     font-size: 14px;
 }
-
+ 
 .control-row {
     display: flex;
     align-items: center;
@@ -304,12 +304,12 @@ body.sidebar-abierto #layout {
     flex-wrap: wrap;
     margin: 8px 0;
 }
-
+ 
 .control-row label {
     font-size: 14px;
     white-space: nowrap;
 }
-
+ 
 #numBins {
     flex: 1;
     min-width: 120px;
@@ -317,19 +317,19 @@ body.sidebar-abierto #layout {
     cursor: pointer;
     accent-color: #00c6ff;
 }
-
+ 
 #binsValDisplay {
     font-weight: bold;
     min-width: 36px;
     text-align: right;
 }
-
+ 
 .escala-group {
     display: flex;
     gap: 6px;
     margin: 8px 0;
 }
-
+ 
 .escala-btn {
     padding: 6px 18px;
     font-size: 14px;
@@ -340,27 +340,27 @@ body.sidebar-abierto #layout {
     cursor: pointer;
     transition: 0.2s;
 }
-
+ 
 .escala-btn.activo {
     background: rgba(0,198,255,0.25);
     border-color: #00c6ff;
     color: #fff;
     font-weight: bold;
 }
-
+ 
 .escala-btn:hover:not(.activo) {
     background: rgba(255,255,255,0.1);
     color: #fff;
 }
-
+ 
 .js-plotly-plot .plotly .drag {
     cursor: default !important;
 }
-
+ 
 .js-plotly-plot:hover .plotly .drag {
     cursor: crosshair;
 }
-
+ 
 .grupo-header {
     background: rgba(0, 198, 255, 0.15);
     border: 1px solid rgba(0, 198, 255, 0.4);
@@ -376,25 +376,25 @@ body.sidebar-abierto #layout {
     align-items: center;
     user-select: none;
 }
-
+ 
 .grupo-header:hover {
     background: rgba(0, 198, 255, 0.25);
 }
-
+ 
 .grupo-body {
     display: none;
     padding-left: 8px;
 }
-
+ 
 .grupo-body.abierto {
     display: block;
 }
-
+ 
 .grupo-header.bloqueado {
     opacity: 0.4;
     pointer-events: none;
 }
-
+ 
 .contenedor-central {
     display: flex;
     flex-direction: column;
@@ -405,7 +405,7 @@ body.sidebar-abierto #layout {
     box-sizing: border-box;
     padding: 0;
 }
-
+ 
 #btnAyuda {
     position: fixed;
     bottom: 24px;
@@ -423,18 +423,18 @@ body.sidebar-abierto #layout {
     box-shadow: 0 4px 15px rgba(0,198,255,0.5);
     transition: transform 0.2s;
 }
-
+ 
 #btnAyuda:hover {
     transform: scale(1.1);
 }
-
+ 
 #btnAyuda:disabled {
     opacity: 0.3;
     cursor: default;
     transform: none;
     box-shadow: none;
 }
-
+ 
 #btnSimulacion {
     position: fixed;
     bottom: 24px;
@@ -463,7 +463,7 @@ body.sidebar-abierto #layout {
     transform: none;
     box-shadow: none;
 }
-
+ 
 #modalSimulacion {
     display: none;
     position: fixed;
@@ -476,7 +476,7 @@ body.sidebar-abierto #layout {
     justify-content: center;
     align-items: center;
 }
-
+ 
 #modalSimulacion > div {
     width: 100% !important;
     height: 100% !important;
@@ -485,7 +485,7 @@ body.sidebar-abierto #layout {
     display: flex !important;
     flex-direction: column !important;
 }
-
+ 
 #modalSimulacion .modal-sim-content {
     flex: 1;
     display: flex;
@@ -591,31 +591,31 @@ body.sidebar-abierto #layout {
     font-size:12px;
     background:#020509
 }
-
+ 
 </style>
 </head>
-
+ 
 <body>
-
+ 
 <div class="fondo">
     <img src="fondo/fondo1.jpeg">
     <img src="fondo/fondo2.jpeg">
     <img src="fondo/fondo3.jpeg">
     <img src="fondo/fondo4.jpeg">
 </div>
-
+ 
 <div class="overlay"></div>
-
+ 
 <div id="layout"> 
     <h1 id="titulo">Análisis del CMS</h1>
     <button id="btnMuestras" class="boton" onclick="habilitarMuestras()">
         Comenzar
     </button>
 </div>
-
+ 
 <div id="sidebar" class="sidebar">
     <h2>Muestras CMS</h2>
-
+ 
     <div class="grupo-header bloqueado" onclick="toggleGrupo('g2muones')">
         2 Muones <span id="flecha-g2muones">▶</span>
     </div>
@@ -623,14 +623,14 @@ body.sidebar-abierto #layout {
         <div class="muestra" data-file="csv/Jpsimumu.csv" onclick="seleccionar(this)">Muestra 1</div>
         <div class="muestra" data-file="csv/Dimuon_DoubleMu.csv" onclick="seleccionar(this)">Muestra 2</div>
     </div>
-
+ 
     <div class="grupo-header bloqueado" onclick="toggleGrupo('g4muones')">
         4 Muones <span id="flecha-g4muones">▶</span> 
     </div>
     <div class="grupo-body" id="g4muones">
     </div>    
 </div>
-
+ 
 <div id="modal" class="modal">
     <div class="modal-content">
         <button class="cerrar" onclick="cerrarModal()">Cerrar</button>
@@ -648,7 +648,7 @@ body.sidebar-abierto #layout {
                     </div>
                     <button class="boton boton-exito boton-pequeno" onclick="confirmarVariable()">Ver histograma</button>
                 </div>
-
+ 
                 <div class="panel-cortes" id="panelCortes" style="display:none">
                     <h3>Aplicar Nuevo Corte</h3>
                     <div style="display:flex; align-items:center; gap:10px; flex-wrap:nowrap;">
@@ -668,7 +668,7 @@ body.sidebar-abierto #layout {
                     </div>
                 </div>
             </div>
-
+ 
             <div id="contenedorBins" style="display:none; align-items:center; gap:16px; flex-wrap:wrap; justify-content:center; margin:10px 0;">
                 <button class="boton boton-exito boton-pequeno" onclick="actualizarGrafica()">Actualizar gráfica</button>
                 <div style="display:flex; align-items:center; gap:8px;">
@@ -687,7 +687,7 @@ body.sidebar-abierto #layout {
             
             <div id="grafica" style="display:none"></div>
             </div>
-
+ 
                 <div class="lista-cortes" id="listaCortes-container" style="display:none">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <h3 style="margin:0;">Cortes Aplicados</h3>
@@ -701,11 +701,11 @@ body.sidebar-abierto #layout {
         </div>
     </div>
 </div>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
+ 
 <script>
 const sidebar = document.getElementById("sidebar");
 const btnMuestras = document.getElementById("btnMuestras");
@@ -715,7 +715,7 @@ modal.addEventListener("transitionend", ()=>{
     if(!modal.classList.contains("activo")){modal.style.pointerEvents = "none";}
 });
 const modalTexto = document.getElementById("modalTexto");
-
+ 
 let bloqueado = false;
 let habilitado = false;
 let datosOriginales = [];
@@ -723,7 +723,7 @@ let datosActuales = [];
 let listaCortes = [];
 let columnasDisponibles = [];
 let escalaLog = false;
-
+ 
 function habilitarMuestras() {
     habilitado = true;
     sidebar.classList.add("abierto");
@@ -734,11 +734,11 @@ function habilitarMuestras() {
     document.getElementById("btnAyuda").disabled = true;
     document.getElementById("btnSimulacion").disabled = true;
 }
-
+ 
 function procesarDatos(data) {
     const tieneNomenclaturaA = data[0].hasOwnProperty('mu1_pt') && data[0].hasOwnProperty('mu2_pt');
     const tieneNomenclaturaB = data[0].hasOwnProperty('pt1') && data[0].hasOwnProperty('pt2');
-
+ 
     if (tieneNomenclaturaA) {
         data.forEach(row => {
             let deta = (row.mu1_eta || 0) - (row.mu2_eta || 0);
@@ -754,48 +754,48 @@ function procesarDatos(data) {
             row.M = Math.sqrt(Math.max(M2, 0));
         });
     }
-
+ 
     if (data.length > 0) {
         columnasDisponibles = Object.keys(data[0]).filter(col => {
             return typeof data[0][col] === 'number' &&
                    (col.includes('pt') || col.includes('eta') || col.includes('phi') || col === 'M');
         });
-
+ 
         console.log("Columnas detectadas:", columnasDisponibles);
-
+ 
         const selectCorte = document.getElementById("variable");
         const selectGrafica = document.getElementById("variableGrafica");
-
+ 
         selectCorte.innerHTML = "";
         selectGrafica.innerHTML = "";
-
+ 
         columnasDisponibles.forEach(col => {
             const option1 = document.createElement("option");
             option1.value = col;
             option1.textContent = col;
             selectCorte.appendChild(option1);
-
+ 
             const option2 = document.createElement("option");
             option2.value = col;
             option2.textContent = col;
             selectGrafica.appendChild(option2);
         });
     }
-
+ 
     datosOriginales = [...data];
     datosActuales = [...data];
     listaCortes = [];
 }
-
+ 
 function confirmarVariable() {
     if (!datosOriginales || datosOriginales.length === 0) {
         alert("Primero selecciona una muestra");
         return;
     }
-
+ 
     const varSeleccionada = document.getElementById("variableGrafica").value;
     const selectCorte = document.getElementById("variable");
-
+ 
     selectCorte.innerHTML = "";
     columnasDisponibles.filter(c => c !== "M").forEach(col => {
         const opt = document.createElement("option");
@@ -803,7 +803,7 @@ function confirmarVariable() {
         opt.textContent = col; 
         selectCorte.appendChild(opt);
     });
-
+ 
     if (varSeleccionada !== "M") {
         selectCorte.value = varSeleccionada; 
         selectCorte.disabled = true;
@@ -818,7 +818,7 @@ function confirmarVariable() {
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
-
+ 
 function aplicarCorteAcumulativo() {
     if (!datosOriginales || datosOriginales.length === 0) {
         alert("Primero carga los datos");
@@ -881,7 +881,7 @@ function aplicarCorteAcumulativo() {
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
-
+ 
 function reiniciarCortes() {
     if (!datosOriginales || datosOriginales.length === 0) {
         alert("No hay datos cargados"); 
@@ -893,7 +893,7 @@ function reiniciarCortes() {
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
-
+ 
 function eliminarCorte(indice) {
     if (indice < 0 || indice >= listaCortes.length) return;
     
@@ -932,7 +932,7 @@ function eliminarCorte(indice) {
     actualizarListaCortes();
     dibujarHistogramaCompleto();
 }
-
+ 
 function actualizarListaCortes() {
     const container = document.getElementById("listaCortes");
     const infoContainer = document.getElementById("infoEventos");
@@ -960,14 +960,14 @@ function actualizarListaCortes() {
         <small style="font-size: 12px;">(Los histogramas muestran el rango completo de los datos)</small>
     `;
 }
-
+ 
 function setEscala(modo) {
     escalaLog = (modo === 'log');
     document.getElementById('btnLin').classList.toggle('activo', !escalaLog);
     document.getElementById('btnLog').classList.toggle('activo', escalaLog);
     dibujarHistogramaCompleto();
 }
-
+ 
 function dibujarHistogramaCompleto() {
     if (!datosOriginales || datosOriginales.length === 0) {
         return;
@@ -1038,7 +1038,7 @@ function dibujarHistogramaCompleto() {
             type: escalaLog ? 'log' : 'linear',
             ...(escalaLog ? {} : { range: [0, yMax]})
         },
-
+ 
         plot_bgcolor: 'rgba(0, 0, 0, 0.3)',
         paper_bgcolor: 'rgba(0, 0, 0, 0)',
         legend: {
@@ -1105,27 +1105,27 @@ function dibujarHistogramaCompleto() {
         displaylogo: false
     });
 }
-
+ 
 function actualizarGrafica() {
     dibujarHistogramaCompleto();
 }
-
+ 
 function seleccionar(el) {
     if (!habilitado || bloqueado) return;
-
+ 
     const nombreMuestra = el.textContent.trim();
-
+ 
     bloqueado = true;
     document.querySelectorAll(".muestra").forEach(e => e.classList.remove("activa"));
     document.querySelectorAll(".grupo-header").forEach(e => e.classList.add("bloqueado"));
     titulo.classList.add("arriba");
-
+ 
     const archivo = el.dataset.file;
     limpiarVistaCargando();
     modalTexto.innerText = "Cargando datos...";
     modal.style.pointerEvents = "auto";
     modal.classList.add("activo");
-
+ 
     Papa.parse(archivo, {
         download: true,
         header: true,
@@ -1142,7 +1142,7 @@ function seleccionar(el) {
         }
     });
 }
-
+ 
 function resetVista() {
     datosActuales = [...datosOriginales];
     listaCortes = [];
@@ -1156,7 +1156,7 @@ function resetVista() {
     document.getElementById("grafica").style.display = "none";
     document.getElementById("listaCortes-container").style.display = "none";
 }
-
+ 
 function cerrarModal() {
     modal.classList.remove("activo");
     modal.style.pointerEvents = "none";
@@ -1167,7 +1167,7 @@ function cerrarModal() {
     document.getElementById("btnAyuda").disabled = false;
     document.getElementById("btnSimulacion").disabled = false;
 }
-
+ 
 document.addEventListener("contextmenu", e => {
     e.preventDefault();
     if (!modal.classList.contains("activo")) {
@@ -1187,7 +1187,7 @@ document.addEventListener("contextmenu", e => {
          document.getElementById("btnSimulacion").disabled = false;
     }
 });
-
+ 
 const graficaDiv = document.getElementById("grafica");
 graficaDiv.addEventListener("mouseenter", () => {
     Plotly.relayout("grafica", { scrollZoom: true });
@@ -1195,50 +1195,50 @@ graficaDiv.addEventListener("mouseenter", () => {
 graficaDiv.addEventListener("mouseleave", () => {
     Plotly.relayout("grafica", { scrollZoom: false });
 });
-
+ 
 function limpiarVistaCargando() {
     datosOriginales = [];
     datosActuales = [];
     listaCortes = [];
     columnasDisponibles = [];
     escalaLog = false;
-
+ 
     document.getElementById('btnLin').classList.add('activo');
     document.getElementById('btnLog').classList.remove('activo');
     document.getElementById('numBins').value = 50;
     document.getElementById('binsValDisplay').textContent = '50';
-
+ 
     document.getElementById("variableGrafica").innerHTML = "";
     document.getElementById("variable").innerHTML = "";
-
+ 
     document.getElementById("panelCortes").style.display = "none";
     document.getElementById("contenedorBins").style.display = "none";
     document.getElementById("grafica").style.display = "none";
     document.getElementById("listaCortes-container").style.display = "none";
-
+ 
     if (document.getElementById("grafica")._fullLayout) {
         Plotly.purge("grafica");
     }
-
+ 
     document.getElementById("listaCortes").innerHTML = "";
     document.getElementById("infoEventos").innerHTML = "";
 }
-
+ 
 function toggleGrupo(id) {
     const body = document.getElementById(id);
     const flecha = document.getElementById("flecha-" + id);
     const abierto = body.classList.toggle("abierto");
     flecha.textContent = abierto ? "▼" : "▶";
 }
-
+ 
 function abrirAyuda() {
     document.getElementById("modalAyuda").style.display = "flex";
 }
-
+ 
 function cerrarAyuda() {
     document.getElementById("modalAyuda").style.display = "none";
 }
-
+ 
 function cambiarTab(tab) {
     const tabs = ['guia', 'analisis'];
     tabs.forEach(t => {
@@ -1252,10 +1252,10 @@ function cambiarTab(tab) {
         btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
     });
 }
-
+ 
 let animCMS = null;
 let particulasCMS = [];
-
+ 
 function iniciarSimulacion() {
     const canvas = document.getElementById('canvasCMS');
     if (!canvas) return;
@@ -1263,9 +1263,9 @@ function iniciarSimulacion() {
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
     const R = canvas.width / 2 - 4;
-
+ 
     canvas.onclick = () => dispararColision(cx, cy);
-
+ 
     function dispararColision(x, y) {
         const nMuones = 2 + Math.floor(Math.random() * 3);
         const nOtras  = 4 + Math.floor(Math.random() * 8);
@@ -1284,10 +1284,10 @@ function iniciarSimulacion() {
                 life: 1, decay: 0.006 + Math.random() * 0.006, tipo: 'otra' });
         }
     }
-
+ 
     function dibujarDetector(ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+ 
         const bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, R);
         bg.addColorStop(0, '#000d1a');
         bg.addColorStop(1, '#000508');
@@ -1295,7 +1295,7 @@ function iniciarSimulacion() {
         ctx.arc(cx, cy, R, 0, Math.PI * 2);
         ctx.fillStyle = bg;
         ctx.fill();
-
+ 
         const capas = [
             { r: R * 0.18, color: 'rgba(0,198,255,0.15)', label: 'Tracker' },
             { r: R * 0.38, color: 'rgba(0,198,255,0.10)', label: 'ECAL' },
@@ -1303,7 +1303,7 @@ function iniciarSimulacion() {
             { r: R * 0.80, color: 'rgba(0,198,255,0.06)', label: 'Solenoide' },
             { r: R * 0.97, color: 'rgba(0,198,255,0.05)', label: 'Muon' },
         ];
-
+ 
         capas.forEach(c => {
             ctx.beginPath();
             ctx.arc(cx, cy, c.r, 0, Math.PI * 2);
@@ -1312,12 +1312,12 @@ function iniciarSimulacion() {
             ctx.stroke();
             ctx.fillStyle = c.color;
             ctx.fill();
-
+ 
             ctx.fillStyle = 'rgba(0,198,255,0.35)';
             ctx.font = '10px Arial';
             ctx.fillText(c.label, cx + c.r * 0.72, cy - 4);
         });
-
+ 
         for (let i = 0; i < 24; i++) {
             const ang = (i / 24) * Math.PI * 2;
             ctx.beginPath();
@@ -1327,13 +1327,13 @@ function iniciarSimulacion() {
             ctx.lineWidth = 1;
             ctx.stroke();
         }
-
+ 
         ctx.beginPath();
         ctx.arc(cx, cy, 4, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(255,255,255,0.9)';
         ctx.fill();
     }
-
+ 
     function dibujarParticulas(ctx) {
         particulasCMS = particulasCMS.filter(p => p.life > 0);
         particulasCMS.forEach(p => {
@@ -1352,7 +1352,7 @@ function iniciarSimulacion() {
             if (dist > R) p.life = 0;
         });
     }
-
+ 
     let timer = 0;
     function loop() {
         dibujarDetector(ctx);
@@ -1361,13 +1361,13 @@ function iniciarSimulacion() {
         if (timer % 90 === 0) dispararColision(cx, cy);
         animCMS = requestAnimationFrame(loop);
     }
-
+ 
     if (animCMS) cancelAnimationFrame(animCMS);
     particulasCMS = [];
     dispararColision(cx, cy);
     loop();
 }
-
+ 
 function detenerSimulacion() {
     if (animCMS) {
         cancelAnimationFrame(animCMS);
@@ -1375,35 +1375,35 @@ function detenerSimulacion() {
     }
     particulasCMS = [];
 }
-
+ 
 (function(){
-
+ 
 var cms3Booted = false;
 var cms3RAF = null; 
 var cms3HandleResize = null;
-
+ 
 function cms3Boot(){
   if (typeof THREE === 'undefined') { setTimeout(cms3Boot, 60); return; }
-
+ 
   var wrap = document.getElementById('cms3-canvas-wrap');
   if (!wrap) return;
   var loadingEl = document.getElementById('cms3-loading');
   var W = wrap.clientWidth || 680;
   var H = wrap.clientHeight || Math.round(W*10/16);
-
+ 
   var scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020509);
   scene.fog = new THREE.FogExp2(0x020509, 0.0009);
-
+ 
   var camera = new THREE.PerspectiveCamera(42, W/H, 1, 5000);
-
+ 
   var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
   renderer.setSize(W, H);
   renderer.outputEncoding = THREE.sRGBEncoding;
   wrap.appendChild(renderer.domElement);
   if (loadingEl) loadingEl.style.display = 'none';
-
+ 
   scene.add(new THREE.AmbientLight(0x40556a, 0.55));
   var key = new THREE.DirectionalLight(0xbfe0ff, 0.9);
   key.position.set(300, 400, 200);
@@ -1413,18 +1413,18 @@ function cms3Boot(){
   scene.add(rim);
   var ipLight = new THREE.PointLight(0xffffff, 0, 600);
   scene.add(ipLight);
-
+ 
   var SCALE = 90;
   var R = { pipe:.055, tracker:.28, ecal:.44, hcal:.60, sol:.68, m1:.78, m2:.88, m3:.975 };
   var ZF = { pipe:.97, tracker:.90, ecal:.82, hcal:.74, sol:.66, m1:.59, m2:.52, m3:.44 };
   var HZ = 1.35;
-
+ 
   var group = new THREE.Group();
   scene.add(group);
-
+ 
   var wireMode = false;
   var meshes = [];
-
+ 
   function addCylinderLayer(rIn, rOut, halfLen, color, opacity, isMuon, radialSegs){
     radialSegs = radialSegs || 56;
     var geo = new THREE.CylinderGeometry(rOut*SCALE, rOut*SCALE, halfLen*2*SCALE, radialSegs, 1, true);
@@ -1442,16 +1442,16 @@ function cms3Boot(){
     var mesh = new THREE.Mesh(geo, mat);
     group.add(mesh);
     meshes.push(mesh);
-
+ 
     var edges = new THREE.EdgesGeometry(geo, 1);
     var lineMat = new THREE.LineBasicMaterial({ color: color, transparent:true, opacity: Math.min(1, opacity*2.2) });
     var lines = new THREE.LineSegments(edges, lineMat);
     group.add(lines);
     meshes.push(lines);
-
+ 
     return mesh;
   }
-
+ 
   addCylinderLayer(0, R.m3,      HZ*ZF.m3,      0xff3333, 0.07, true, 48);
   addCylinderLayer(0, R.m2,      HZ*ZF.m2,      0xff5555, 0.08, true, 48);
   addCylinderLayer(0, R.m1,      HZ*ZF.m1,      0xff7777, 0.09, true, 48);
@@ -1460,7 +1460,7 @@ function cms3Boot(){
   addCylinderLayer(0, R.ecal,    HZ*ZF.ecal,    0x36d27a, 0.16, false, 48);
   addCylinderLayer(0, R.tracker, HZ*ZF.tracker, 0x3fa0e8, 0.13, false, 40);
   addCylinderLayer(0, R.pipe,    HZ*ZF.pipe,    0xcfcfcf, 0.45, false, 24);
-
+ 
   (function(){
     var ringGroup = new THREE.Group();
     var segs = 18;
@@ -1486,12 +1486,12 @@ function cms3Boot(){
     }
     group.add(ringGroup);
   })();
-
+ 
   var ipGeo = new THREE.SphereGeometry(2.4, 16, 16);
   var ipMat = new THREE.MeshBasicMaterial({ color:0xffffff });
   var ipMesh = new THREE.Mesh(ipGeo, ipMat);
   group.add(ipMesh);
-
+ 
   function makeGlowTexture(){
     var c = document.createElement('canvas'); c.width=c.height=128;
     var ctx = c.getContext('2d');
@@ -1502,14 +1502,14 @@ function cms3Boot(){
     ctx.fillStyle = g; ctx.fillRect(0,0,128,128);
     return new THREE.CanvasTexture(c);
   }
-
+ 
   var haloMat = new THREE.SpriteMaterial({
     map: makeGlowTexture(), color: 0x9fd9ff, transparent:true, opacity:0.0, depthWrite:false, blending:THREE.AdditiveBlending
   });
   var halo = new THREE.Sprite(haloMat);
   halo.scale.set(40,40,1);
   group.add(halo);
-
+ 
   var gridGeo = new THREE.BufferGeometry();
   var gridPts = [];
   for (var gi=-6; gi<=6; gi++){
@@ -1520,22 +1520,22 @@ function cms3Boot(){
   var gridMat = new THREE.LineBasicMaterial({ color:0x0e3050, transparent:true, opacity:0.35 });
   var grid = new THREE.LineSegments(gridGeo, gridMat);
   scene.add(grid);
-
+ 
   var axesHelper = new THREE.AxesHelper(70);
   axesHelper.material.transparent = true;
   axesHelper.material.opacity = 0.45;
   scene.add(axesHelper);
-
+ 
   var camTheta = 0.7, camPhi = 0.42, camDist = 330;
   var autoOn = false, dragging = false, lastX=0, lastY=0;
-
+ 
   var PRESETS = {
     front:{ theta:0, phi:0.001, dist:300 },
     side: { theta:Math.PI/2, phi:0.001, dist:300 },
     top:  { theta:0.001, phi:Math.PI/2-0.05, dist:330 },
     iso:  { theta:0.7, phi:0.42, dist:330 }
   };
-
+ 
   function applyCamera(){
     var x = camDist*Math.sin(camTheta)*Math.cos(camPhi);
     var y = camDist*Math.sin(camPhi);
@@ -1544,7 +1544,7 @@ function cms3Boot(){
     camera.lookAt(0,0,0);
   }
   applyCamera();
-
+ 
   window.cms3SetView = function(k){
     var p = PRESETS[k];
     camTheta = p.theta; camPhi = p.phi; camDist = p.dist;
@@ -1552,12 +1552,12 @@ function cms3Boot(){
     var btn = document.querySelector('.c3-btn[data-v="'+k+'"]');
     if (btn) btn.classList.add('active');
   };
-
+ 
   window.cms3ToggleAuto = function(){
     autoOn = !autoOn;
     document.getElementById('cms3-auto').classList.toggle('active', autoOn);
   };
-
+ 
   window.cms3ToggleWire = function(){
     wireMode = !wireMode;
     document.getElementById('cms3-wire').classList.toggle('active', wireMode);
@@ -1567,10 +1567,10 @@ function cms3Boot(){
       }
     });
   };
-
+ 
   var canvas = renderer.domElement;
   canvas.style.cursor = 'grab';
-
+ 
   canvas.addEventListener('mousedown', function(e){
     dragging = true; lastX = e.clientX; lastY = e.clientY;
     canvas.style.cursor = 'grabbing';
@@ -1588,7 +1588,7 @@ function cms3Boot(){
     e.preventDefault();
     camDist = Math.max(80, Math.min(900, camDist + e.deltaY*0.4));
   }, { passive:false });
-
+ 
   var touch0 = null;
   canvas.addEventListener('touchstart', function(e){ e.preventDefault(); touch0 = e.touches[0]; }, {passive:false});
   canvas.addEventListener('touchmove', function(e){
@@ -1599,18 +1599,18 @@ function cms3Boot(){
     camPhi = Math.max(-1.45, Math.min(1.45, camPhi - (t.clientY-touch0.clientY)*0.008));
     touch0 = t;
   }, {passive:false});
-
+ 
   canvas.addEventListener('click', function(){ if(!dragging) spawnCollision(); });
-
+ 
   var activeTracks = [];
   var cols=0, mus=0, jts=0, trks=0;
-
+ 
   function rndDir(){
     var th = Math.random()*Math.PI*2;
     var ph = (Math.random()-0.5)*Math.PI*0.85;
     return new THREE.Vector3(Math.cos(ph)*Math.cos(th), Math.sin(ph), Math.cos(ph)*Math.sin(th));
   }
-
+ 
   function buildHelixPoints(dir, curv, maxLen, steps){
     var pts = [];
     var pos = new THREE.Vector3(0,0,0);
@@ -1626,7 +1626,7 @@ function cms3Boot(){
     }
     return pts;
   }
-
+ 
   function buildStraightPoints(dir, maxRxy, maxZ, steps){
     var pts = [];
     var pos = new THREE.Vector3(0,0,0);
@@ -1639,7 +1639,7 @@ function cms3Boot(){
     }
     return pts;
   }
-
+ 
   function makeTrackMesh(pts, color, lw){
     if (pts.length < 2) return null;
     var curve = new THREE.CatmullRomCurve3(pts);
@@ -1649,7 +1649,7 @@ function cms3Boot(){
     group.add(mesh);
     return { mesh: mesh, life:1, decay: 0.012 + Math.random()*0.01 };
   }
-
+ 
   function makeJetBar(dir, energy){
     var rIn = R.ecal*SCALE, rOut = rIn + energy*R.hcal*SCALE*0.7;
     var p0 = dir.clone().multiplyScalar(rIn);
@@ -1664,15 +1664,15 @@ function cms3Boot(){
     group.add(mesh);
     return { mesh: mesh, life:1, decay: 0.006 };
   }
-
+ 
   function spawnCollision(){
     cols++;
     var elCol = document.getElementById('c3-col'); if (elCol) elCol.textContent = cols;
-
+ 
     ipLight.intensity = 6;
     haloMat.opacity = 0.95;
     halo.scale.set(50,50,1);
-
+ 
     var nT = 10 + Math.floor(Math.random()*12);
     trks += nT; var elTrk = document.getElementById('c3-trk'); if (elTrk) elTrk.textContent = trks;
     for (var i=0;i<nT;i++){
@@ -1682,7 +1682,7 @@ function cms3Boot(){
       var t = makeTrackMesh(pts, 0x3fb6ff, 0.45);
       if (t) activeTracks.push(t);
     }
-
+ 
     var nMu = Math.random()<0.4 ? 2 : 0;
     mus += nMu; var elMu = document.getElementById('c3-mu'); if (elMu) elMu.textContent = mus;
     for (i=0;i<nMu;i++){
@@ -1691,7 +1691,7 @@ function cms3Boot(){
       t = makeTrackMesh(pts, 0xff3333, 0.7);
       if (t){ t.decay = 0.007; activeTracks.push(t); }
     }
-
+ 
     var nEM = 3 + Math.floor(Math.random()*5);
     for (i=0;i<nEM;i++){
       d = rndDir();
@@ -1699,7 +1699,7 @@ function cms3Boot(){
       t = makeTrackMesh(pts, 0x33ff8c, 0.5);
       if (t){ t.decay = 0.018; activeTracks.push(t); }
     }
-
+ 
     var nJet = 2 + Math.floor(Math.random()*4);
     jts += nJet; var elJet = document.getElementById('c3-jet'); if (elJet) elJet.textContent = jts;
     for (var j=0;j<nJet;j++){
@@ -1718,7 +1718,7 @@ function cms3Boot(){
       }
       activeTracks.push(makeJetBar(d, E));
     }
-
+ 
     var nH2 = 3 + Math.floor(Math.random()*5);
     for (i=0;i<nH2;i++){
       d = rndDir();
@@ -1728,18 +1728,18 @@ function cms3Boot(){
     }
   }
   window.cms3SpawnCollision = spawnCollision;
-
+ 
   var tick = 0;
   function animate(){
     cms3RAF = requestAnimationFrame(animate);
-
+ 
     if (autoOn) camTheta += 0.0035;
     applyCamera();
-
+ 
     ipLight.intensity *= 0.90;
     haloMat.opacity *= 0.90;
     halo.scale.multiplyScalar(0.96);
-
+ 
     for (var i=activeTracks.length-1;i>=0;i--){
       var tr = activeTracks[i];
       tr.life -= tr.decay;
@@ -1752,13 +1752,13 @@ function cms3Boot(){
         tr.mesh.material.opacity = Math.max(0, tr.life);
       }
     }
-
+ 
     tick++;
     if (tick % 95 === 0) spawnCollision();
-
+ 
     renderer.render(scene, camera);
   }
-
+ 
   function handleResize(){
     var w = wrap.clientWidth;
     var h = wrap.clientHeight;
@@ -1769,15 +1769,16 @@ function cms3Boot(){
   }
   window.addEventListener('resize', handleResize);
   cms3HandleResize = handleResize;
-
+ 
   spawnCollision();
   animate();
 }
-
-
+ 
+ 
 var originalCambiarTab = window.cambiarTab;
 window.abrirSimulacionModal = function(){
     document.getElementById('modalSimulacion').style.display = 'flex';
+    cambiarTabSim('cms');
     if (!cms3Booted){
         cms3Booted = true;
         setTimeout(function() {
@@ -1791,35 +1792,460 @@ window.abrirSimulacionModal = function(){
 window.cerrarSimulacionModal = function(){
     document.getElementById('modalSimulacion').style.display = 'none';
 };
-
+ 
 window.cambiarTabSim = function(tab){
-    const tabs = ['simulacion', 'fisica', 'guiasim'];
-    const idMap = { simulacion:'Simulacion', fisica:'Fisica', guiasim:'Guiasim' };
-    const displayMap = { simulacion:'flex', fisica:'block', guiasim:'block' };
+    const tabs = ['cms', 'fisica', 'simulacion', 'guiasim'];
+    const idMap = { cms:'Cms', fisica:'Fisica', simulacion:'Simulacion', guiasim:'Guiasim' };
+    const displayMap = { cms:'flex', fisica:'block', simulacion:'flex', guiasim:'block' };
     tabs.forEach(t => {
         const suf = idMap[t];
         const btn = document.getElementById('tabSim' + suf);
         const contenido = document.getElementById('contenidoSim' + suf);
-        if (!btn || !contenido) return;
+        if (!contenido) return;
         const activo = t === tab;
         contenido.style.display = activo ? displayMap[t] : 'none';
-        btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
-        btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
-        btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
+        if (btn) {
+            btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
+            btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
+            btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
+        }
     });
     if (tab === 'simulacion') {
         setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 50);
     }
 };
-
+ 
 })();
+
+
+// Variables globales para el explorador CMS
+var cmsExplorer = null;
+
+function initCmsExplorer() {
+    if (cmsExplorer) return; // ya inicializado
+
+    var wrap = document.getElementById('cms-explorer-wrap');
+    if (!wrap) return;
+    var loadingEl = document.getElementById('cms-explorer-loading');
+    var W = wrap.clientWidth || 600;
+    var H = wrap.clientHeight || 400;
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x020509);
+
+    var camera = new THREE.PerspectiveCamera(42, W/H, 1, 5000);
+
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(W, H);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    wrap.appendChild(renderer.domElement);
+    if (loadingEl) loadingEl.style.display = 'none';
+
+    // Luces
+    scene.add(new THREE.AmbientLight(0x40556a, 0.55));
+    var key = new THREE.DirectionalLight(0xbfe0ff, 0.9);
+    key.position.set(300, 400, 200);
+    scene.add(key);
+    var rim = new THREE.PointLight(0x3fb6ff, 1.1, 2000);
+    rim.position.set(-200, 100, -300);
+    scene.add(rim);
+
+    var SCALE = 90;
+    var R = { pipe: 0.055, tracker: 0.28, ecal: 0.44, hcal: 0.60, sol: 0.68, m1: 0.78, m2: 0.88, m3: 0.975 };
+    var ZF = { pipe: 0.97, tracker: 0.90, ecal: 0.82, hcal: 0.74, sol: 0.66, m1: 0.59, m2: 0.52, m3: 0.44 };
+    var HZ = 1.35;
+
+    var group = new THREE.Group();
+    scene.add(group);
+
+    // Definición de capas (se usará para los checkboxes)
+    var layerDefs = [
+        { name: 'Tubo de haz', rOut: R.pipe, color: 0xcfcfcf, opacity: 0.45, halfLen: HZ * ZF.pipe, radialSegs: 24,
+          info: {
+            subtitulo: 'El corazón del acelerador',
+            material: 'Berilio de alta pureza.',
+            funcion: 'Es el tubo por donde circulan, en vacío casi perfecto, los dos haces de protones que viajan en direcciones opuestas cerca de la velocidad de la luz.',
+            proposito: 'El berilio se eligió porque tiene muy pocos electrones por átomo, así que las partículas que salen de la colisión lo atraviesan casi sin desviarse ni perder energía, permitiendo que las mediciones del resto del detector sean lo más limpias posible.'
+          }
+        },
+        { name: 'Tracker', rOut: R.tracker, color: 0x3fa0e8, opacity: 0.13, halfLen: HZ * ZF.tracker, radialSegs: 40,
+          info: {
+            subtitulo: 'Rastreador de trayectorias (Silicon Tracker)',
+            material: 'Millones de sensores de silicio, organizados en píxeles (cerca del punto de colisión) y tiras de silicio (más alejadas).',
+            funcion: 'Registra puntos exactos por donde pasa cada partícula cargada, permitiendo reconstruir su trayectoria curva dentro del campo magnético del solenoide.',
+            proposito: 'La curvatura de la trayectoria indica el momento (pt) y la carga eléctrica de la partícula. También permite ubicar con precisión el punto donde ocurrió la colisión (vértice primario) y posibles decaimientos secundarios.'
+          }
+        },
+        { name: 'ECAL', rOut: R.ecal, color: 0x36d27a, opacity: 0.16, halfLen: HZ * ZF.ecal, radialSegs: 48,
+          info: {
+            subtitulo: 'Calorímetro electromagnético',
+            material: 'Cristales centelladores de tungstenato de plomo (PbWO4), muy densos y transparentes.',
+            funcion: 'Detiene por completo a electrones y fotones, que depositan toda su energía en los cristales y producen destellos de luz proporcionales a esa energía.',
+            proposito: 'Permite medir con gran precisión la energía de electrones y fotones, clave para identificar procesos como la desintegración del bosón de Higgs en dos fotones.'
+          }
+        },
+        { name: 'HCAL', rOut: R.hcal, color: 0xff8c1a, opacity: 0.14, halfLen: HZ * ZF.hcal, radialSegs: 48,
+          info: {
+            subtitulo: 'Calorímetro hadrónico',
+            material: 'Capas alternadas de latón (o acero) como material absorbente y centelladores plásticos como material activo.',
+            funcion: 'Detiene y mide la energía de los hadrones (protones, neutrones, piones) que atraviesan el ECAL sin ser absorbidos por completo, generando "lluvias" de partículas secundarias.',
+            proposito: 'Es esencial para reconstruir jets (chorros de hadrones) y para estimar la energía transversa faltante, una señal indirecta de partículas que escapan sin ser detectadas, como los neutrinos.'
+          }
+        },
+        { name: 'Solenoide', rOut: R.sol, color: 0xffd24a, opacity: 0.16, halfLen: HZ * ZF.sol, radialSegs: 56,
+          info: {
+            subtitulo: 'Imán solenoide superconductor',
+            material: 'Bobina superconductora de niobio-titanio, enfriada a temperaturas criogénicas (~4 K).',
+            funcion: 'Genera un campo magnético intenso y muy uniforme de unos 3.8 Tesla (cerca de 100,000 veces el campo magnético terrestre) dentro del volumen del tracker y los calorímetros.',
+            proposito: 'El campo magnético curva la trayectoria de las partículas cargadas; midiendo esa curvatura en el tracker se calcula su momento. De hecho, "CMS" significa Compact Muon Solenoid, en honor a este imán.'
+          }
+        },
+        { name: 'Muón 1', rOut: R.m1, color: 0xff7777, opacity: 0.09, halfLen: HZ * ZF.m1, radialSegs: 48,
+          info: {
+            subtitulo: 'Cámaras de muones — primera estación',
+            material: 'Cámaras de gas (tubos de deriva y cámaras de placas resistivas) intercaladas con el yugo de hierro que retorna el flujo magnético.',
+            funcion: 'Detecta el paso de muones, las únicas partículas cargadas capaces de atravesar el tubo de haz, el tracker y ambos calorímetros sin ser absorbidas.',
+            proposito: 'Esta primera estación, la más cercana al centro, empieza a registrar la posición del muón para reconstruir su trayectoria fuera del solenoide.'
+          }
+        },
+        { name: 'Muón 2', rOut: R.m2, color: 0xff5555, opacity: 0.08, halfLen: HZ * ZF.m2, radialSegs: 48,
+          info: {
+            subtitulo: 'Cámaras de muones — segunda estación',
+            material: 'Mismo tipo de cámaras de gas, separadas de la anterior por más hierro del yugo magnético.',
+            funcion: 'Aporta un segundo punto de medición de la posición del muón, más alejado del centro.',
+            proposito: 'Al combinar varias estaciones se reconstruye con precisión la curva del muón fuera del solenoide, lo que permite calcular su momento de forma independiente al tracker, como verificación cruzada.'
+          }
+        },
+        { name: 'Muón 3', rOut: R.m3, color: 0xff3333, opacity: 0.07, halfLen: HZ * ZF.m3, radialSegs: 48,
+          info: {
+            subtitulo: 'Cámaras de muones — estación exterior',
+            material: 'Cámaras de gas, en la capa más externa del detector, justo antes del límite del propio CMS.',
+            funcion: 'Es la última estación que registra la posición del muón antes de que abandone el detector.',
+            proposito: 'Confirma que la partícula detectada es realmente un muón (y no ruido) y cierra la reconstrucción de su trayectoria. Los muones son la firma clave de procesos como la desintegración del Higgs en cuatro muones.'
+          }
+        }
+    ];
+
+    var layerGroups = [];
+
+    function addLayer(def) {
+        var groupLayer = new THREE.Group();
+        var geo = new THREE.CylinderGeometry(def.rOut * SCALE, def.rOut * SCALE, def.halfLen * 2 * SCALE, def.radialSegs, 1, true);
+        geo.rotateX(Math.PI / 2);
+        var mat = new THREE.MeshPhysicalMaterial({
+            color: def.color,
+            transparent: true,
+            opacity: def.opacity,
+            metalness: 0.15,
+            roughness: 0.35,
+            side: THREE.DoubleSide,
+            emissive: def.color,
+            emissiveIntensity: 0.10
+        });
+        var mesh = new THREE.Mesh(geo, mat);
+        groupLayer.add(mesh);
+
+        var edges = new THREE.EdgesGeometry(geo, 1);
+        var lineMat = new THREE.LineBasicMaterial({ color: def.color, transparent: true, opacity: Math.min(1, def.opacity * 2.2) });
+        var lines = new THREE.LineSegments(edges, lineMat);
+        groupLayer.add(lines);
+
+        group.add(groupLayer);
+        layerGroups.push(groupLayer);
+        return groupLayer;
+    }
+
+    // Crear capas
+    layerDefs.forEach(function(def) { addLayer(def); });
+
+    // Punto de interacción (IP)
+    var ipGeo = new THREE.SphereGeometry(2.4, 16, 16);
+    var ipMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    var ipMesh = new THREE.Mesh(ipGeo, ipMat);
+    group.add(ipMesh);
+
+    // Grid
+    var gridGeo = new THREE.BufferGeometry();
+    var gridPts = [];
+    for (var gi = -6; gi <= 6; gi++) {
+        gridPts.push(gi * 30, 0, -HZ * 1.1 * SCALE, gi * 30, 0, HZ * 1.1 * SCALE);
+        gridPts.push(-R.m3 * 1.1 * SCALE, 0, gi * 30, R.m3 * 1.1 * SCALE, 0, gi * 30);
+    }
+    gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(gridPts, 3));
+    var gridMat = new THREE.LineBasicMaterial({ color: 0x0e3050, transparent: true, opacity: 0.35 });
+    var grid = new THREE.LineSegments(gridGeo, gridMat);
+    scene.add(grid);
+
+    // Ejes
+    var axesHelper = new THREE.AxesHelper(70);
+    axesHelper.material.transparent = true;
+    axesHelper.material.opacity = 0.45;
+    scene.add(axesHelper);
+
+    // Controles de cámara (igual que en la simulación)
+    var camTheta = 0.7, camPhi = 0.42, camDist = 330;
+    var dragging = false, lastX = 0, lastY = 0;
+
+    function applyCamera() {
+        var x = camDist * Math.sin(camTheta) * Math.cos(camPhi);
+        var y = camDist * Math.sin(camPhi);
+        var z = camDist * Math.cos(camTheta) * Math.cos(camPhi);
+        camera.position.set(x, y, z);
+        camera.lookAt(0, 0, 0);
+    }
+    applyCamera();
+
+    var canvas = renderer.domElement;
+    canvas.style.cursor = 'grab';
+
+    canvas.addEventListener('mousedown', function(e) {
+        dragging = true;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        canvas.style.cursor = 'grabbing';
+    });
+    window.addEventListener('mouseup', function() {
+        dragging = false;
+        canvas.style.cursor = 'grab';
+    });
+    window.addEventListener('mousemove', function(e) {
+        if (!dragging) return;
+        var dx = e.clientX - lastX;
+        var dy = e.clientY - lastY;
+        camTheta += dx * 0.006;
+        camPhi = Math.max(-1.45, Math.min(1.45, camPhi - dy * 0.006));
+        lastX = e.clientX;
+        lastY = e.clientY;
+    });
+    canvas.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        camDist = Math.max(80, Math.min(900, camDist + e.deltaY * 0.4));
+    }, { passive: false });
+
+    // Touch events
+    var touch0 = null;
+    canvas.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        touch0 = e.touches[0];
+    }, { passive: false });
+    canvas.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        if (!touch0) return;
+        var t = e.touches[0];
+        camTheta += (t.clientX - touch0.clientX) * 0.008;
+        camPhi = Math.max(-1.45, Math.min(1.45, camPhi - (t.clientY - touch0.clientY) * 0.008));
+        touch0 = t;
+    }, { passive: false });
+
+    // Función para resetear vista
+    window.cmsExplorerResetView = function() {
+        camTheta = 0.7;
+        camPhi = 0.42;
+        camDist = 330;
+        applyCamera();
+    };
+
+    // Animación
+    function animate() {
+        requestAnimationFrame(animate);
+        applyCamera();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // Manejo de resize
+    function handleResize() {
+        var w = wrap.clientWidth;
+        var h = wrap.clientHeight;
+        if (!w || !h) return;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', handleResize);
+
+    // Almacenar referencias
+    cmsExplorer = {
+        scene: scene,
+        camera: camera,
+        renderer: renderer,
+        group: group,
+        layerGroups: layerGroups,
+        grid: grid,
+        axes: axesHelper,
+        handleResize: handleResize,
+        setLayerVisible: function(index, visible) {
+            if (layerGroups[index]) layerGroups[index].visible = visible;
+        },
+        setGridVisible: function(visible) {
+            grid.visible = visible;
+        },
+        setAxesVisible: function(visible) {
+            axesHelper.visible = visible;
+        }
+    };
+
+        // 📋 GENERAR FILAS INTERACTIVAS (checkbox + nombre clicable) EN EL PANEL LATERAL
+    var listContainer = document.getElementById('cms-layer-list');
+    var infoPanel = document.getElementById('cms-layer-info');
+    var layerRows = [];
+    var highlightTimers = [];
+    var idxActivo = -1;
+
+    function hexColor(intColor) {
+        return '#' + intColor.toString(16).padStart(6, '0');
+    }
+
+    function mostrarInfoCapa(idx) {
+        var def = layerDefs[idx];
+        if (!def || !infoPanel) return;
+
+        idxActivo = idx;
+        layerRows.forEach(function(row, i) {
+            row.style.background = (i === idx) ? 'rgba(0,198,255,0.14)' : 'transparent';
+            row.style.borderColor = (i === idx) ? 'rgba(0,198,255,0.4)' : 'transparent';
+        });
+
+        var info = def.info || {};
+        infoPanel.innerHTML =
+            '<div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">' +
+                '<span style="width:12px; height:12px; border-radius:3px; background:' + hexColor(def.color) + '; flex-shrink:0;"></span>' +
+                '<strong style="color:#5fc8ff; font-size:13px;">' + def.name + '</strong>' +
+            '</div>' +
+            (info.subtitulo ? '<div style="color:#7fbbe0; font-size:11px; font-style:italic; margin-bottom:6px;">' + info.subtitulo + '</div>' : '') +
+            (info.material ? '<div style="margin-bottom:6px;"><strong style="color:#4a7494;">¿De qué está hecha?</strong><br>' + info.material + '</div>' : '') +
+            (info.funcion ? '<div style="margin-bottom:6px;"><strong style="color:#4a7494;">¿Qué hace?</strong><br>' + info.funcion + '</div>' : '') +
+            (info.proposito ? '<div><strong style="color:#4a7494;">¿Para qué sirve?</strong><br>' + info.proposito + '</div>' : '');
+
+        // Resaltado temporal de la capa en el visor 3D para conectar la fila con el objeto
+        var grupo = layerGroups[idx];
+        if (grupo) {
+            clearTimeout(highlightTimers[idx]);
+            grupo.traverse(function(obj) {
+                if (obj.material && obj.material.emissiveIntensity !== undefined) {
+                    obj.material.emissiveIntensity = 0.9;
+                } else if (obj.material && obj.material.opacity !== undefined && obj.type === 'LineSegments') {
+                    obj.material.opacity = Math.min(1, obj.material.opacity * 1.8);
+                }
+            });
+            highlightTimers[idx] = setTimeout(function() {
+                grupo.traverse(function(obj) {
+                    if (obj.material && obj.material.emissiveIntensity !== undefined) {
+                        obj.material.emissiveIntensity = 0.10;
+                    }
+                });
+            }, 900);
+        }
+    }
+
+    if (listContainer) {
+        listContainer.innerHTML = '';
+        layerDefs.forEach(function(def, idx) {
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex; align-items:center; gap:6px; padding:4px 6px; border-radius:6px; border:1px solid transparent; transition:.15s;';
+
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = true;
+            cb.style.cssText = 'flex-shrink:0; cursor:pointer;';
+            cb.addEventListener('click', function(e) { e.stopPropagation(); });
+            cb.addEventListener('change', function() {
+                cmsExplorer.setLayerVisible(idx, this.checked);
+            });
+
+            var swatch = document.createElement('span');
+            swatch.style.cssText = 'width:10px; height:10px; border-radius:2px; flex-shrink:0; background:' + hexColor(def.color) + ';';
+
+            var nombre = document.createElement('span');
+            nombre.textContent = def.name;
+            nombre.style.cssText = 'color:#bcd8ea; font-size:12px; cursor:pointer; flex:1;';
+            nombre.title = 'Clic para ver información de esta capa';
+
+            row.appendChild(cb);
+            row.appendChild(swatch);
+            row.appendChild(nombre);
+            row.addEventListener('click', function() { mostrarInfoCapa(idx); });
+            row.addEventListener('mouseenter', function() {
+                if (idxActivo !== idx) row.style.background = 'rgba(255,255,255,0.05)';
+            });
+            row.addEventListener('mouseleave', function() {
+                if (idxActivo !== idx) row.style.background = 'transparent';
+            });
+
+            listContainer.appendChild(row);
+            layerRows.push(row);
+        });
+    }
+    // Checkboxes de grid y ejes
+    var gridCb = document.getElementById('cms-show-grid');
+    if (gridCb) {
+        gridCb.checked = true;
+        gridCb.addEventListener('change', function() {
+            cmsExplorer.setGridVisible(this.checked);
+        });
+    }
+    var axesCb = document.getElementById('cms-show-axes');
+    if (axesCb) {
+        axesCb.checked = true;
+        axesCb.addEventListener('change', function() {
+            cmsExplorer.setAxesVisible(this.checked);
+        });
+    }
+
+    // Forzar resize inicial
+    setTimeout(handleResize, 50);
+}
+
+// Modificar cambiarTabSim para inicializar CMS al activar la pestaña
+var originalCambiarTabSim = window.cambiarTabSim;
+window.cambiarTabSim = function(tab) {
+    // Llamar a la función original si existe
+    if (typeof originalCambiarTabSim === 'function') {
+        originalCambiarTabSim(tab);
+    } else {
+        // Si no existe, implementar la lógica básica
+        var tabs = ['cms', 'fisica', 'simulacion', 'guiasim'];
+        var idMap = { cms: 'Cms', fisica: 'Fisica', simulacion: 'Simulacion', guiasim: 'Guiasim' };
+        var displayMap = { cms: 'flex', fisica: 'block', simulacion: 'flex', guiasim: 'block' };
+        tabs.forEach(function(t) {
+            var suf = idMap[t];
+            var btn = document.getElementById('tabSim' + suf);
+            var contenido = document.getElementById('contenidoSim' + suf);
+            if (!contenido) return;
+            var activo = (t === tab);
+            contenido.style.display = activo ? displayMap[t] : 'none';
+            if (btn) {
+                btn.style.background = activo ? 'rgba(0,198,255,0.2)' : 'transparent';
+                btn.style.color = activo ? '#00c6ff' : 'rgba(255,255,255,0.5)';
+                btn.style.borderBottom = activo ? '3px solid #00c6ff' : '3px solid transparent';
+            }
+        });
+        if (tab === 'simulacion') {
+            setTimeout(function() {
+                if (typeof cms3HandleResize === 'function') cms3HandleResize();
+            }, 50);
+        }
+    }
+
+    // Si se activa la pestaña CMS, inicializar el explorador
+    if (tab === 'cms') {
+        if (!cmsExplorer) {
+            setTimeout(initCmsExplorer, 50);
+        } else {
+            setTimeout(function() {
+                if (cmsExplorer && cmsExplorer.handleResize) cmsExplorer.handleResize();
+            }, 100);
+        }
+    }
+};
 </script>
 <button id="btnAyuda" onclick="abrirAyuda()" title="Ayuda">?</button>
-
+ 
 <div id="modalAyuda" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
      background:rgba(0,10,30,1); z-index:200; justify-content:center; align-items:center;">
      <div style="display:flex; flex-direction:column; width:700px; max-width:90%; max-height:90vh;">
-
+ 
         <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
             <button onclick="cerrarAyuda()"
                 style="background:red; color:white; border:none; border-radius:6px;
@@ -1827,17 +2253,17 @@ window.cambiarTabSim = function(tab){
                 ✕ Cerrar
             </button>
         </div>
-
+ 
          <div style="background:linear-gradient(to bottom, #001f3f, #000814); color:white;
             border-radius:14px; overflow:hidden;
             border:1px solid rgba(0,198,255,0.3);">
-
+ 
             <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
                 <button id="tabGuia" onclick="cambiarTab('guia')"
                     style="flex:1; padding:14px; background:rgba(0,198,255,0.2); color:#00c6ff;
                            border:none; font-size:15px; font-weight:bold; cursor:pointer;
                            border-bottom:3px solid #00c6ff;">
-                    Guía de uso
+                    ¿Cómo usar la aplicación?
                 </button>
                 <button id="tabAnalisis" onclick="cambiarTab('analisis')"
                 style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
@@ -1846,9 +2272,9 @@ window.cambiarTabSim = function(tab){
                     Acerca del análisis
                 </button>
             </div>
-
+ 
             <div id="contenidoGuia" style="padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
-                <h2 style="color:#00c6ff; margin-top:0;">¿Cómo usar la aplicación?</h2>
+                <h2 style="color:#00c6ff; margin-top:0;">¿Cómo se usa?</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
                     Esta aplicación te permite explorar datos reales del detector CMS del CERN, analizando colisiones de partículas subatómicas mediante histogramas y filtros interactivos.
                 </p>
@@ -1883,16 +2309,16 @@ window.cambiarTabSim = function(tab){
                     </li>
                 </ol>
             </div>
-
+ 
              <div id="contenidoAnalisis" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
                 <h2 style="color:#00c6ff; margin-top:0;">Acerca del análisis</h2>
                 <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:20px;">
                     Esta aplicación reproduce, de forma simplificada, el flujo de trabajo real que usan los científicos  del CERN para identificar partículas subatómicas a partir de datos del detector CMS.
                 </p>
-
+ 
                 <h3 style="color:#00c6ff;">¿Qué tipo de datos se analizan?</h3>
                 <p>Los datos provienen de colisiones protón-protón registradas por el detector CMS durante operaciones del LHC. Cada <strong>evento</strong> representa una colisión individual y contiene las propiedades cinemáticas de los muones producidos: momento transverso (pt), pseudorapidez (η) y ángulo azimutal (φ).</p>
-
+ 
                 <h3 style="color:#00c6ff;">Flujo del análisis</h3>
                 <ol style="padding-left:20px;">
                     <li style="margin-bottom:12px;">
@@ -1929,11 +2355,11 @@ window.cambiarTabSim = function(tab){
                     <em>Los datos utilizados en esta aplicación son datos abiertos (Open Data) publicados oficialmente por el CERN a través del portal <strong>CERN Open Data</strong>, disponibles para uso educativo y de investigación.</em>
                 </p>
             </div>
-
+ 
         </div>
     </div>
 </div>
-
+ 
 <button id="btnSimulacion" onclick="window.abrirSimulacionModal()" title="Simulación del detector CMS">⚛</button>
  
 <div id="modalSimulacion" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
@@ -1953,11 +2379,11 @@ window.cambiarTabSim = function(tab){
                     border:1px solid rgba(0,198,255,0.3);">
  
             <div style="display:flex; border-bottom:1px solid rgba(0,198,255,0.3);">
-                <button id="tabSimSimulacion" onclick="cambiarTabSim('simulacion')"
+                <button id="tabSimCms" onclick="cambiarTabSim('cms')"
                     style="flex:1; padding:14px; background:rgba(0,198,255,0.2); color:#00c6ff;
                            border:none; font-size:15px; font-weight:bold; cursor:pointer;
                            border-bottom:3px solid #00c6ff;">
-                    Simulación 3D
+                    CMS
                 </button>
                 <button id="tabSimFisica" onclick="cambiarTabSim('fisica')"
                     style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
@@ -1965,18 +2391,45 @@ window.cambiarTabSim = function(tab){
                            border-bottom:3px solid transparent;">
                     Conceptos físicos
                 </button>
-                <button id="tabSimGuiasim" onclick="cambiarTabSim('guiasim')"
+                <button id="tabSimSimulacion" onclick="cambiarTabSim('simulacion')"
                     style="flex:1; padding:14px; background:transparent; color:rgba(255,255,255,0.5);
                            border:none; font-size:15px; font-weight:bold; cursor:pointer;
                            border-bottom:3px solid transparent;">
-                    Guía de uso
+                    Simulación
                 </button>
             </div>
+
+            <div id="contenidoSimCms" style="display:flex; flex-direction:row; align-items:stretch; padding:10px; height:100%; overflow:hidden; gap:10px;">
+    <!-- Visor 3D (ocupa el espacio restante) -->
+    <div id="cms-explorer-wrap" style="flex:1; position:relative; min-height:0; background:#020509; border-radius:8px; overflow:hidden;">
+        <div id="cms-explorer-loading" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#3fb6e0; font-size:12px; background:#020509;">Cargando detector...</div>
+        <div id="cms-explorer-hint" style="position:absolute; left:10px; bottom:10px; font-size:10px; color:#194161; letter-spacing:.05em; pointer-events:none;">arrastra para orbitar · scroll zoom</div>
+    </div>
+    <!-- Panel lateral de controles (arriba a la derecha, debajo de las pestañas) -->
+    <div id="cms-controls" style="width:260px; background:rgba(10,26,42,0.9); border-radius:8px; padding:12px; overflow-y:auto; border:1px solid rgba(0,198,255,0.15); flex-shrink:0; display:flex; flex-direction:column; gap:8px;">
+        <h4 style="color:#00c6ff; margin:0 0 2px 0; font-size:14px; border-bottom:1px solid rgba(0,198,255,0.2); padding-bottom:6px;">Capas del detector</h4>
+        <p style="margin:0 0 4px 0; font-size:11px; color:#4a7494; line-height:1.4;">Haz clic en el nombre de una capa para ver de qué está hecha y para qué sirve. Usa la casilla para mostrarla u ocultarla.</p>
+        <div id="cms-layer-list" style="display:flex; flex-direction:column; gap:4px;"></div>
+        <div id="cms-layer-info" style="margin-top:4px; padding:10px; border-radius:8px; background:rgba(0,198,255,0.06); border:1px solid rgba(0,198,255,0.18); font-size:11.5px; line-height:1.6; color:#bcd8ea; min-height:70px;">
+            <em style="color:#4a7494;">Selecciona una capa arriba para ver su descripción: material, función y para qué sirve dentro del detector.</em>
+        </div>
+        <hr style="border-color:rgba(0,198,255,0.15); margin:6px 0;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="color:#4a7494; font-size:12px; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" id="cms-show-grid" checked> Mostrar grid
+            </label>
+            <label style="color:#4a7494; font-size:12px; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" id="cms-show-axes" checked> Mostrar ejes
+            </label>
+        </div>
+        <button class="c3-btn" style="margin-top:6px; width:100%;" onclick="cmsExplorerResetView()">Resetear vista</button>
+    </div>
+</div>    
  
-             <div id="contenidoSimSimulacion" style="flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
-                <h2 style="color:#00c6ff; margin-top:0;">Simulación 3D del Detector CMS</h2>
-                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:10px;">
-                    Arrastra para orbitar · Rueda para zoom · Clic en el detector para disparar una colisión
+             <div id="contenidoSimSimulacion" style="display:none; flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
+                <h2 style="color:#00c6ff; margin-top:0;">Simulación del Detector CMS</h2>
+               <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:10px;">
+                     Esta simulación permite explorar cómo se registran los muones en el detector CMS durante colisiones protón-protón en el LHC.
                 </p>
  
                 <div id="cms3-root">
@@ -1986,11 +2439,11 @@ window.cambiarTabSim = function(tab){
                     <button class="c3-btn" data-v="top" onclick="cms3SetView('top')">Superior</button>
                     <button class="c3-btn active" data-v="iso" onclick="cms3SetView('iso')">Isométrica</button>
                     <button class="c3-btn" id="cms3-auto" onclick="cms3ToggleAuto()">Auto-rotar</button>
-                    <button class="c3-btn" id="cms3-wire" onclick="cms3ToggleWire()">Solo estructura</button>
-                    <span style="margin-left:auto;font-size:9px;color:#194161;letter-spacing:.1em">CMS · LHC · CERN · WebGL</span>
+                    <button class="c3-btn" id="cms3-wire" onclick="cms3ToggleWire()">Solo estructura</button> 
+                    <span style="margin-left:auto;font-size:9px;color:#194161;letter-spacing:.1em">CMS · LHC · CERN</span>
                   </div>
                   <div id="cms3-canvas-wrap">
-                    <div id="cms3-loading">Cargando WebGL…</div>
+                    <div id="cms3-loading">Cargando …</div>
                   </div>
                   <div id="cms3-leg">
                     <div class="c3-leg"><div class="c3-sw" style="background:#ff3b3b"></div>Muones</div>
@@ -2004,7 +2457,7 @@ window.cambiarTabSim = function(tab){
                     <div class="c3-st">Muones <b id="c3-mu">0</b></div>
                     <div class="c3-st">Jets <b id="c3-jet">0</b></div>
                     <div class="c3-st">Trazas <b id="c3-trk">0</b></div>
-                    <div class="c3-st" style="margin-left:auto;color:#194161">arrastra para orbitar · scroll zoom · clic colisión</div>
+                    <button class="c3-btn" id="cms3-btn-guia" style="margin-left:auto;" onclick="cambiarTabSim('guiasim')" >Guía de uso</button>
                   </div>
                 </div>
             </div>
@@ -2090,6 +2543,6 @@ window.cambiarTabSim = function(tab){
         </div>
     </div>
 </div>
-
+ 
 </body>
 </html>
