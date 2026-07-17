@@ -2399,22 +2399,22 @@ window.cambiarTabSim = function(tab) {
                 </button>
             </div>
 
-            <div id="contenidoSimCms" style="display:flex; flex-direction:row; align-items:stretch; padding:10px; height:100%; overflow:hidden; gap:10px;">
+            <div id="contenidoSimCms" style="display:flex; flex-direction:row; align-items:stretch; padding:10px; height:100%; min-height:0; overflow:hidden; gap:10px;">
     <!-- Visor 3D (ocupa el espacio restante) -->
     <div id="cms-explorer-wrap" style="flex:1; position:relative; min-height:0; background:#020509; border-radius:8px; overflow:hidden;">
         <div id="cms-explorer-loading" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#3fb6e0; font-size:12px; background:#020509;">Cargando detector...</div>
         <div id="cms-explorer-hint" style="position:absolute; left:10px; bottom:10px; font-size:10px; color:#194161; letter-spacing:.05em; pointer-events:none;">arrastra para orbitar · scroll zoom</div>
     </div>
     <!-- Panel lateral de controles (arriba a la derecha, debajo de las pestañas) -->
-    <div id="cms-controls" style="width:260px; background:rgba(10,26,42,0.9); border-radius:8px; padding:12px; overflow-y:auto; border:1px solid rgba(0,198,255,0.15); flex-shrink:0; display:flex; flex-direction:column; gap:8px;">
+    <div id="cms-controls" style="width:260px; min-height:0; background:rgba(10,26,42,0.9); border-radius:8px; padding:12px; overflow-y:auto; border:1px solid rgba(0,198,255,0.15); flex-shrink:0; display:flex; flex-direction:column; gap:8px;">
         <h4 style="color:#00c6ff; margin:0 0 2px 0; font-size:14px; border-bottom:1px solid rgba(0,198,255,0.2); padding-bottom:6px;">Capas del detector</h4>
         <p style="margin:0 0 4px 0; font-size:11px; color:#4a7494; line-height:1.4;">Haz clic en el nombre de una capa para ver de qué está hecha y para qué sirve. Usa la casilla para mostrarla u ocultarla.</p>
-        <div id="cms-layer-list" style="display:flex; flex-direction:column; gap:4px;"></div>
-        <div id="cms-layer-info" style="margin-top:4px; padding:10px; border-radius:8px; background:rgba(0,198,255,0.06); border:1px solid rgba(0,198,255,0.18); font-size:11.5px; line-height:1.6; color:#bcd8ea; min-height:70px;">
+        <div id="cms-layer-list" style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;"></div>
+        <div id="cms-layer-info" style="margin-top:4px; padding:10px; border-radius:8px; background:rgba(0,198,255,0.06); border:1px solid rgba(0,198,255,0.18); font-size:11.5px; line-height:1.6; color:#bcd8ea; min-height:56px; max-height:200px; overflow-y:auto; flex-shrink:0;">
             <em style="color:#4a7494;">Selecciona una capa arriba para ver su descripción: material, función y para qué sirve dentro del detector.</em>
         </div>
-        <hr style="border-color:rgba(0,198,255,0.15); margin:6px 0;">
-        <div style="display:flex; flex-direction:column; gap:4px;">
+        <hr style="border-color:rgba(0,198,255,0.15); margin:6px 0; flex-shrink:0;">
+        <div style="display:flex; flex-direction:column; gap:4px; flex-shrink:0;">
             <label style="color:#4a7494; font-size:12px; display:flex; align-items:center; gap:6px;">
                 <input type="checkbox" id="cms-show-grid" checked> Mostrar grid
             </label>
@@ -2422,7 +2422,7 @@ window.cambiarTabSim = function(tab) {
                 <input type="checkbox" id="cms-show-axes" checked> Mostrar ejes
             </label>
         </div>
-        <button class="c3-btn" style="margin-top:6px; width:100%;" onclick="cmsExplorerResetView()">Resetear vista</button>
+        <button class="c3-btn" style="margin-top:6px; width:100%; flex-shrink:0;" onclick="cmsExplorerResetView()">Resetear vista</button>
     </div>
 </div>    
  
