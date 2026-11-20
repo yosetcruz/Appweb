@@ -628,6 +628,7 @@ body.sidebar-abierto #layout {
         4 Muones <span id="flecha-g4muones">▶</span> 
     </div>
     <div class="grupo-body" id="g4muones">
+        <div class="muestra" onclick="abrir4el(this)">Muestra 1</div>
     </div>    
 </div>
  
@@ -738,7 +739,7 @@ function habilitarMuestras() {
 function procesarDatos(data) {
     const tieneNomenclaturaA = data[0].hasOwnProperty('mu1_pt') && data[0].hasOwnProperty('mu2_pt');
     const tieneNomenclaturaB = data[0].hasOwnProperty('pt1') && data[0].hasOwnProperty('pt2');
- 
+
     if (tieneNomenclaturaA) {
         data.forEach(row => {
             let deta = (row.mu1_eta || 0) - (row.mu2_eta || 0);
@@ -1170,7 +1171,7 @@ function cerrarModal() {
  
 document.addEventListener("contextmenu", e => {
     e.preventDefault();
-    if (!modal.classList.contains("activo")) {
+        if (!modal.classList.contains("activo") && !document.getElementById("modal4el").classList.contains("activo")) {
         sidebar.classList.remove("abierto");
         btnMuestras.disabled = false;
         document.body.classList.remove("sidebar-abierto");
@@ -1814,6 +1815,34 @@ window.cambiarTabSim = function(tab){
         setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 50);
     }
 };
+
+window.toggleGuiaSimulacion = function(forzar){
+    var panel = document.getElementById('cms3-guide-panel');
+    var btn = document.getElementById('cms3-btn-guia');
+    if (!panel) return;
+
+    var estaAbierto = panel.style.display !== 'none' && panel.style.display !== '';
+    var abrir = (typeof forzar === 'boolean') ? forzar : !estaAbierto;
+
+    if (abrir && !panel.dataset.lleno) {
+        var fuente = document.getElementById('contenidoSimGuiasim');
+        if (fuente) {
+            panel.innerHTML =
+                '<div style="display:flex; justify-content:flex-end; margin-bottom:6px;">' +
+                    '<button onclick="toggleGuiaSimulacion(false)" style="background:red; color:white; border:none; border-radius:6px; padding:5px 10px; cursor:pointer; font-size:11px; font-weight:bold;">✕ Cerrar</button>' +
+                '</div>' +
+                fuente.innerHTML;
+            panel.dataset.lleno = '1';
+        }
+    }
+
+    panel.style.display = abrir ? 'block' : 'none';
+    if (btn) {
+        btn.classList.toggle('active', abrir);
+        btn.textContent = abrir ? '✕ Cerrar guía' : 'Guía de uso';
+    }
+    setTimeout(function(){ cms3HandleResize && cms3HandleResize(); }, 60);
+};
  
 })();
 
@@ -2427,11 +2456,13 @@ window.cambiarTabSim = function(tab) {
 </div>    
  
              <div id="contenidoSimSimulacion" style="display:none; flex-direction:column; padding:10px; overflow:hidden; text-align:center; flex:1; min-height:0;">
+              <div id="cms3-split-wrap" style="display:flex; flex-direction:row; flex:1; min-height:0; width:100%; gap:10px; box-sizing:border-box;">
+                <div id="cms3-main-panel" style="display:flex; flex-direction:column; flex:1; min-width:0; min-height:0;">
                 <h2 style="color:#00c6ff; margin-top:0;">Simulación del Detector CMS</h2>
                <p style="color:rgba(255,255,255,0.7); font-size:14px; margin-bottom:10px;">
                      Esta simulación permite explorar cómo se registran los muones en el detector CMS durante colisiones protón-protón en el LHC.
                 </p>
- 
+
                 <div id="cms3-root">
                   <div id="cms3-bar">
                     <button class="c3-btn" data-v="front" onclick="cms3SetView('front')">Frontal</button>
@@ -2439,7 +2470,7 @@ window.cambiarTabSim = function(tab) {
                     <button class="c3-btn" data-v="top" onclick="cms3SetView('top')">Superior</button>
                     <button class="c3-btn active" data-v="iso" onclick="cms3SetView('iso')">Isométrica</button>
                     <button class="c3-btn" id="cms3-auto" onclick="cms3ToggleAuto()">Auto-rotar</button>
-                    <button class="c3-btn" id="cms3-wire" onclick="cms3ToggleWire()">Solo estructura</button> 
+                    <button class="c3-btn" id="cms3-wire" onclick="cms3ToggleWire()">Solo estructura</button>
                     <span style="margin-left:auto;font-size:9px;color:#194161;letter-spacing:.1em">CMS · LHC · CERN</span>
                   </div>
                   <div id="cms3-canvas-wrap">
@@ -2457,9 +2488,12 @@ window.cambiarTabSim = function(tab) {
                     <div class="c3-st">Muones <b id="c3-mu">0</b></div>
                     <div class="c3-st">Jets <b id="c3-jet">0</b></div>
                     <div class="c3-st">Trazas <b id="c3-trk">0</b></div>
-                    <button class="c3-btn" id="cms3-btn-guia" style="margin-left:auto;" onclick="cambiarTabSim('guiasim')" >Guía de uso</button>
+                    <button class="c3-btn" id="cms3-btn-guia" style="margin-left:auto;" onclick="toggleGuiaSimulacion()">Guía de uso</button>
                   </div>
                 </div>
+                </div>
+                <div id="cms3-guide-panel" style="display:none; width:360px; flex-shrink:0; text-align:left; background:rgba(10,26,42,0.95); border-radius:8px; padding:16px; overflow-y:auto; border:1px solid rgba(0,198,255,0.2); font-size:12.5px;"></div>
+              </div>
             </div>
  
             <div id="contenidoSimFisica" style="display:none; padding:28px; overflow-y:auto; max-height:65vh; line-height:1.8;">
@@ -2544,5 +2578,6 @@ window.cambiarTabSim = function(tab) {
     </div>
 </div>
  
+<script src="analisis4l.js"></script>
 </body>
 </html>
